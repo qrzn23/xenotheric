@@ -24,6 +24,7 @@ var _dash_timer := 0.0
 var _invuln_timer := 0.0
 var _morph := false
 var _facing := 1
+var _invuln_flash_phase := 0.0
 
 const BULLET_SCENE := preload("res://scenes/props/Bullet.tscn")
 const MISSILE_SCENE := preload("res://scenes/props/Missile.tscn")
@@ -33,6 +34,7 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
     _update_timers(delta)
+    _update_invuln_flash(delta)
     _handle_input(delta)
     _apply_gravity(delta)
     _move_and_slide()
@@ -43,6 +45,15 @@ func _update_timers(delta: float) -> void:
     _jump_buffer = max(_jump_buffer - delta, 0)
     _dash_timer = max(_dash_timer - delta, 0)
     _invuln_timer = max(_invuln_timer - delta, 0)
+    if _invuln_timer <= 0:
+        _reset_invuln_flash()
+
+func _update_invuln_flash(delta: float) -> void:
+    if _invuln_timer <= 0:
+        return
+    _invuln_flash_phase += delta * 14.0
+    var alpha := 0.35 + 0.35 * sin(_invuln_flash_phase * PI)
+    _set_sprite_modulate(Color(1, 1, 1, clamp(alpha, 0.2, 0.7)))
 
 func _handle_input(delta: float) -> void:
     var dir := Input.get_action_strength("move_right") - Input.get_action_strength("move_left")
@@ -115,6 +126,7 @@ func _toggle_morph() -> void:
     $Sprite2D.visible = not _morph or not $MorphSprite2D # fallback
     if has_node("MorphSprite2D"):
         $MorphSprite2D.visible = _morph
+    _set_sprite_modulate(Color.WHITE)
 
 func _fire_bullet() -> void:
     var bullet := BULLET_SCENE.instantiate()
@@ -136,8 +148,20 @@ func take_damage(amount: int) -> void:
     if _invuln_timer > 0:
         return
     _invuln_timer = 1.0
+    _invuln_flash_phase = 0.0
+    _set_sprite_modulate(Color(1, 0.8, 0.8, 0.9))
     velocity.y = -180
     GameState.take_damage(amount)
     took_damage.emit(amount)
     if GameState.health <= 0:
         died.emit()
+
+func _set_sprite_modulate(color: Color) -> void:
+    if has_node("Sprite2D"):
+        $Sprite2D.modulate = color
+    if has_node("MorphSprite2D"):
+        $MorphSprite2D.modulate = color
+
+func _reset_invuln_flash() -> void:
+    _invuln_flash_phase = 0.0
+    _set_sprite_modulate(Color.WHITE)
