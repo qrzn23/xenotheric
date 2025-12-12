@@ -7,6 +7,7 @@ builds/
 .mono/
 .idea/
 .vs/
+*.uid
 
 # OS-specific cruft
 .DS_Store
