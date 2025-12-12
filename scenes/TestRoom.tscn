@@ -9,21 +9,21 @@
 [ext_resource type="Texture2D" path="res://assets/environment/layers/tilesets.png" id="7"]
 [ext_resource type="Script" path="res://scripts/rooms/TestRoomGround.gd" id="8"]
 
-[sub_resource type="RectangleShape2D" id="1"]
+[sub_resource type="RectangleShape2D" id="101"]
 size = Vector2(960, 40)
-[sub_resource type="RectangleShape2D" id="2"]
+[sub_resource type="RectangleShape2D" id="102"]
 size = Vector2(200, 20)
-[sub_resource type="TileSet" id="3"]
+[sub_resource type="TileSet" id="103"]
 physics_layer_0/collision_layer = 1
 physics_layer_0/collision_mask = 1
-sources/0 = SubResource("4")
-[sub_resource type="TileSetAtlasSource" id="4"]
+sources/0 = SubResource("104")
+[sub_resource type="TileSetAtlasSource" id="104"]
 texture = ExtResource("7")
 texture_region_size = Vector2i(16, 16)
 0/0/size = Vector2i(1, 1)
 0/0/texture_region = Rect2i(0, 0, 16, 16)
-0/0/physics_layer_0/shape = SubResource("5")
-[sub_resource type="ConvexPolygonShape2D" id="5"]
+0/0/physics_layer_0/shape = SubResource("105")
+[sub_resource type="ConvexPolygonShape2D" id="105"]
 points = PackedVector2Array(0, 0, 16, 0, 16, 16, 0, 16)
 
 [node name="TestRoom" type="Node2D"]
@@ -67,11 +67,11 @@ centered = false
 position = Vector2(0, 320)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Ground"]
-shape = SubResource("1")
+shape = SubResource("101")
 
 [node name="GroundTiles" type="TileMap" parent="."]
 position = Vector2(0, 300)
-tile_set = SubResource("3")
+tile_set = SubResource("103")
 cell_quadrant_size = 16
 script = ExtResource("8")
 width_tiles = 70
@@ -80,13 +80,13 @@ width_tiles = 70
 position = Vector2(180, 200)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlatformLeft"]
-shape = SubResource("2")
+shape = SubResource("102")
 
 [node name="PlatformRight" type="StaticBody2D" parent="."]
 position = Vector2(460, 140)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlatformRight"]
-shape = SubResource("2")
+shape = SubResource("102")
 
 [node name="Player" parent="." instance=ExtResource("1")]
 position = Vector2(120, 120)
