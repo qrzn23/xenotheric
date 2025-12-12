@@ -1,36 +1,80 @@
-[gd_scene load_steps=9 format=3]
+[gd_scene load_steps=23 format=3]
 
 [ext_resource type="Script" path="res://scripts/player/Player.gd" id="1"]
-[ext_resource type="Texture2D" path="res://assets/spritesheets/player/player-idle.png" id="2"]
-[ext_resource type="Texture2D" path="res://assets/spritesheets/player/player-run.png" id="3"]
-[ext_resource type="Texture2D" path="res://assets/spritesheets/player/player-jump.png" id="4"]
-[ext_resource type="Texture2D" path="res://assets/spritesheets/player/player-hurt.png" id="5"]
-[ext_resource type="Texture2D" path="res://assets/spritesheets/player/player-duck.png" id="6"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/player-idle/player-idle-1.png" id="2"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/player-idle/player-idle-2.png" id="3"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/player-idle/player-idle-3.png" id="4"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/player-idle/player-idle-4.png" id="5"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/player-run/player-run-1.png" id="6"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/player-run/player-run-2.png" id="7"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/player-run/player-run-3.png" id="8"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/player-run/player-run-4.png" id="9"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/player-run/player-run-5.png" id="10"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/player-run/player-run-6.png" id="11"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/player-jump/player-jump-1.png" id="12"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/player-jump/player-jump-2.png" id="13"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/player-jump/player-jump-3.png" id="14"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/player-jump/player-jump-4.png" id="15"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/player-jump/player-jump-5.png" id="16"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/player-jump/player-jump-6.png" id="17"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/player-hurt/player-hurt-1.png" id="18"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/player-hurt/player-hurt-2.png" id="19"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/player-duck/player-duck.png" id="20"]
 
 [sub_resource type="SpriteFrames" id=2]
 animations = [{
 "frames": [{
-"duration": 0.08,
-"texture": ExtResource(3)
+"duration": 0.06,
+"texture": ExtResource(6)
 }, {
-"duration": 0.08,
-"texture": ExtResource(3)
+"duration": 0.06,
+"texture": ExtResource(7)
+}, {
+"duration": 0.06,
+"texture": ExtResource(8)
+}, {
+"duration": 0.06,
+"texture": ExtResource(9)
+}, {
+"duration": 0.06,
+"texture": ExtResource(10)
+}, {
+"duration": 0.06,
+"texture": ExtResource(11)
 }],
 "loop": true,
 "name": &"run",
 "speed": 12.0
 }, {
 "frames": [{
-"duration": 0.08,
-"texture": ExtResource(3)
+"duration": 0.06,
+"texture": ExtResource(6)
+}, {
+"duration": 0.06,
+"texture": ExtResource(7)
+}, {
+"duration": 0.06,
+"texture": ExtResource(8)
+}, {
+"duration": 0.06,
+"texture": ExtResource(9)
 }],
 "loop": true,
 "name": &"dash",
-"speed": 12.0
+"speed": 14.0
 }, {
 "frames": [{
 "duration": 0.08,
 "texture": ExtResource(2)
+}, {
+"duration": 0.08,
+"texture": ExtResource(3)
+}, {
+"duration": 0.08,
+"texture": ExtResource(4)
+}, {
+"duration": 0.08,
+"texture": ExtResource(5)
 }],
 "loop": true,
 "name": &"idle",
@@ -38,23 +82,38 @@ animations = [{
 }, {
 "frames": [{
 "duration": 0.08,
-"texture": ExtResource(4)
+"texture": ExtResource(12)
+}, {
+"duration": 0.08,
+"texture": ExtResource(13)
+}, {
+"duration": 0.08,
+"texture": ExtResource(14)
 }],
 "loop": true,
 "name": &"jump",
-"speed": 8.0
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 0.08,
-"texture": ExtResource(4)
+"texture": ExtResource(15)
+}, {
+"duration": 0.08,
+"texture": ExtResource(16)
+}, {
+"duration": 0.08,
+"texture": ExtResource(17)
 }],
 "loop": true,
 "name": &"fall",
-"speed": 8.0
+"speed": 10.0
 }, {
 "frames": [{
-"duration": 0.08,
-"texture": ExtResource(5)
+"duration": 0.1,
+"texture": ExtResource(18)
+}, {
+"duration": 0.1,
+"texture": ExtResource(19)
 }],
 "loop": true,
 "name": &"hurt",
@@ -65,10 +124,10 @@ animations = [{
 animations = [{
 "frames": [{
 "duration": 0.08,
-"texture": ExtResource(6)
+"texture": ExtResource(20)
 }, {
 "duration": 0.08,
-"texture": ExtResource(6)
+"texture": ExtResource(20)
 }],
 "loop": true,
 "name": &"roll",
@@ -76,7 +135,7 @@ animations = [{
 }, {
 "frames": [{
 "duration": 0.08,
-"texture": ExtResource(6)
+"texture": ExtResource(20)
 }],
 "loop": true,
 "name": &"idle",
