@@ -1,0 +1,50 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between square brackets
+;   param=value ; assign values to parameters
+
+config_version=5
+
+_global_script_class_cache={}
+
+[application]
+config/name="Metroid Clone"
+run/main_scene="res://scenes/rooms/World.tscn"
+
+[autoload]
+GameState="*res://scripts/core/GameState.gd"
+Pause="*res://scripts/core/Pause.gd"
+CameraRig="*res://scripts/core/CameraRig.gd"
+
+[debug]
+settings/stdout/print_fps=true
+
+[display]
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/stretch/mode="viewport"
+window/stretch/aspect="keep"
+
+[input]
+move_left={"deadzone":0.3,"events":[{"type":"joy_button","index":14},{"type":"key","scancode":16777231}]}
+move_right={"deadzone":0.3,"events":[{"type":"joy_button","index":15},{"type":"key","scancode":16777233}]}
+move_up={"deadzone":0.3,"events":[{"type":"joy_button","index":12},{"type":"key","scancode":16777232}]}
+move_down={"deadzone":0.3,"events":[{"type":"joy_button","index":13},{"type":"key","scancode":16777234}]}
+jump={"deadzone":0.3,"events":[{"type":"joy_button","index":0},{"type":"key","scancode":32}]}
+fire={"deadzone":0.3,"events":[{"type":"joy_button","index":2},{"type":"key","scancode":70}]}
+missile={"deadzone":0.3,"events":[{"type":"joy_button","index":5},{"type":"key","scancode":82}]}
+dash={"deadzone":0.3,"events":[{"type":"joy_button","index":1},{"type":"key","scancode":16}]}
+morph={"deadzone":0.3,"events":[{"type":"joy_button","index":4},{"type":"key","scancode":83}]}
+pause={"deadzone":0.3,"events":[{"type":"joy_button","index":7},{"type":"key","scancode":16777217}]}
+
+[locale]
+translation_remaps={}
+
+[physics]
+common/physics_fps=120
+
+[rendering]
+quality/filters/msaa=2

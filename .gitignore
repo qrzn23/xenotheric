@@ -1,0 +1,13 @@
+# Godot build outputs and generated imports
+.import/
+.godot/
+builds/
+
+# Mono/NET artifacts
+.mono/
+.idea/
+.vs/
+
+# OS-specific cruft
+.DS_Store
+Thumbs.db
