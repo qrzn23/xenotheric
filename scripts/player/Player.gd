@@ -25,6 +25,8 @@ var _invuln_timer := 0.0
 var _morph := false
 var _facing := 1
 var _invuln_flash_phase := 0.0
+var _last_anim_logged := ""
+var _test_force_on_floor := false
 
 const BULLET_SCENE := preload("res://scenes/props/Bullet.tscn")
 const MISSILE_SCENE := preload("res://scenes/props/Missile.tscn")
@@ -59,6 +61,7 @@ func _update_invuln_flash(delta: float) -> void:
 func _handle_input(delta: float) -> void:
     var dir := Input.get_action_strength("move_right") - Input.get_action_strength("move_left")
     var desired := dir * move_speed
+    _log_inputs()
 
     if _dash_timer > 0:
         velocity.x = lerp(velocity.x, _facing * dash_speed, 0.3)
@@ -185,7 +188,7 @@ func _update_animation() -> void:
         anim = "hurt"
     elif _dash_timer > 0:
         anim = "dash"
-    elif not is_on_floor():
+    elif not _is_considered_on_floor():
         anim = "jump" if velocity.y < 0 else "fall"
     elif abs(velocity.x) > 1:
         anim = "run"
@@ -197,5 +200,38 @@ func _play_anim(sprite: AnimatedSprite2D, name: String) -> void:
         return
     if sprite.animation != name:
         sprite.play(name)
+        _log_anim(name)
     elif not sprite.is_playing():
         sprite.play()
+        _log_anim(name)
+
+func _is_considered_on_floor() -> bool:
+    return _test_force_on_floor or is_on_floor()
+
+func _set_test_on_floor(value: bool) -> void:
+    _test_force_on_floor = value
+
+func _log_inputs() -> void:
+    if not OS.is_debug_build():
+        return
+    if Input.is_action_just_pressed("move_left"):
+        print("input: move_left pressed")
+    if Input.is_action_just_pressed("move_right"):
+        print("input: move_right pressed")
+    if Input.is_action_just_pressed("jump"):
+        print("input: jump pressed")
+    if Input.is_action_just_pressed("dash"):
+        print("input: dash pressed")
+    if Input.is_action_just_pressed("fire"):
+        print("input: fire pressed")
+    if Input.is_action_just_pressed("missile"):
+        print("input: missile pressed")
+    if Input.is_action_just_pressed("morph"):
+        print("input: morph pressed")
+
+func _log_anim(name: String) -> void:
+    if not OS.is_debug_build():
+        return
+    if name != _last_anim_logged:
+        print("anim:", name)
+        _last_anim_logged = name
