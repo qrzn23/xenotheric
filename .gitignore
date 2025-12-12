@@ -8,6 +8,7 @@ builds/
 .idea/
 .vs/
 *.uid
+*.import
 
 # OS-specific cruft
 .DS_Store

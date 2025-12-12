@@ -39,6 +39,7 @@ func _physics_process(delta: float) -> void:
     _apply_gravity(delta)
     _move_and_slide()
     _update_facing()
+    _update_animation()
 
 func _update_timers(delta: float) -> void:
     _coyote_timer = max(_coyote_timer - delta, 0)
@@ -106,6 +107,13 @@ func _move_and_slide() -> void:
 func _update_facing() -> void:
     if abs(velocity.x) > 1:
         _facing = sign(velocity.x)
+    _apply_facing_to_sprites()
+
+func _apply_facing_to_sprites() -> void:
+    if has_node("Sprite2D"):
+        $Sprite2D.flip_h = _facing < 0
+    if has_node("MorphSprite2D"):
+        $MorphSprite2D.flip_h = _facing < 0
 
 func _is_touching_wall() -> bool:
     return is_on_wall()
@@ -127,6 +135,7 @@ func _toggle_morph() -> void:
     if has_node("MorphSprite2D"):
         $MorphSprite2D.visible = _morph
     _set_sprite_modulate(Color.WHITE)
+    _update_animation()
 
 func _fire_bullet() -> void:
     var bullet := BULLET_SCENE.instantiate()
@@ -165,3 +174,28 @@ func _set_sprite_modulate(color: Color) -> void:
 func _reset_invuln_flash() -> void:
     _invuln_flash_phase = 0.0
     _set_sprite_modulate(Color.WHITE)
+
+func _update_animation() -> void:
+    if _morph:
+        _play_anim($MorphSprite2D, "roll")
+        return
+
+    var anim := "idle"
+    if _invuln_timer > 0:
+        anim = "hurt"
+    elif _dash_timer > 0:
+        anim = "dash"
+    elif not is_on_floor():
+        anim = "jump" if velocity.y < 0 else "fall"
+    elif abs(velocity.x) > 1:
+        anim = "run"
+
+    _play_anim($Sprite2D, anim)
+
+func _play_anim(sprite: AnimatedSprite2D, name: String) -> void:
+    if not sprite:
+        return
+    if sprite.animation != name:
+        sprite.play(name)
+    elif not sprite.is_playing():
+        sprite.play()
