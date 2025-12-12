@@ -10,7 +10,10 @@ func _physics_process(delta: float) -> void:
     velocity.x = direction * speed
     move_and_slide()
     if is_on_wall():
-        direction *= -1
+        _flip_direction()
 
 func take_damage(amount: int) -> void:
     queue_free()
+
+func _flip_direction() -> void:
+    direction *= -1

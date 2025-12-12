@@ -29,3 +29,19 @@ func test_ability_unlock_and_query():
 	game_state.abilities["dash"] = false
 	game_state.unlock("dash")
 	assert_true(game_state.has_ability("dash"), "dash should be unlocked")
+
+func test_add_health_clamps_and_emits_signal():
+	var events: Array = []
+	game_state.health = game_state.max_health - 5
+	game_state.health_changed.connect(func(current: int, max_value: int): events.append([current, max_value]))
+	game_state.add_health(10)
+	assert_eq(game_state.health, game_state.max_health, "health should clamp at max")
+	assert_eq(events, [[game_state.max_health, game_state.max_health]], "health_changed emitted with clamped values")
+
+func test_add_missiles_clamps_and_emits_signal():
+	var events: Array = []
+	game_state.missiles = game_state.max_missiles - 1
+	game_state.missiles_changed.connect(func(current: int, max_value: int): events.append([current, max_value]))
+	game_state.add_missiles(5)
+	assert_eq(game_state.missiles, game_state.max_missiles, "missiles should clamp at max")
+	assert_eq(events, [[game_state.max_missiles, game_state.max_missiles]], "missiles_changed emitted with clamped values")
