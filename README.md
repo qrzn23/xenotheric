@@ -8,6 +8,9 @@ Lightweight Metroidvania prototype built with Godot 4. Playable scenes live in `
 - Tests (GUT): `godot4 --path . --headless -s res://addons/gut/gut_cmdln.gd -gdir=res://tests --rendering-driver opengl3 --quit-after 1`  
   The `--quit-after` timer can print a harmless leak warning.
 
+## Scenes
+- `scenes/TestRoom.tscn`: quick local scene with parallax backdrop, ground collider, and the player spawned in for manual checks.
+
 ## Tests in this repo
 - `tests/test_game_state.gd`: health/missile signals, clamping, ability unlocks.
 - `tests/test_player_movement.gd`: coyote/jump buffers, morph collider/sprite toggling.

@@ -1,0 +1,70 @@
+[gd_scene load_steps=9 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/player/Player.tscn" id="1"]
+[ext_resource type="Texture2D" path="res://assets/environment/layers/background.png" id="2"]
+[ext_resource type="Texture2D" path="res://assets/environment/layers/middleground.png" id="3"]
+[ext_resource type="Texture2D" path="res://assets/environment/layers/walls.png" id="4"]
+[ext_resource type="Texture2D" path="res://assets/environment/layers/props.png" id="5"]
+
+[sub_resource type="RectangleShape2D" id="1"]
+size = Vector2(640, 40)
+[sub_resource type="RectangleShape2D" id="2"]
+size = Vector2(200, 20)
+
+[node name="TestRoom" type="Node2D"]
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+scroll_base_scale = Vector2(1, 1)
+
+[node name="BG" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.2, 0.2)
+
+[node name="Background" type="Sprite2D" parent="ParallaxBackground/BG"]
+position = Vector2(0, -60)
+texture = ExtResource("2")
+centered = false
+
+[node name="MG" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.5, 0.5)
+
+[node name="Middleground" type="Sprite2D" parent="ParallaxBackground/MG"]
+position = Vector2(0, -40)
+texture = ExtResource("3")
+centered = false
+
+[node name="WallsLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(1, 1)
+
+[node name="Walls" type="Sprite2D" parent="ParallaxBackground/WallsLayer"]
+position = Vector2(0, -20)
+texture = ExtResource("4")
+centered = false
+
+[node name="PropsLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(1.1, 1.1)
+
+[node name="Props" type="Sprite2D" parent="ParallaxBackground/PropsLayer"]
+position = Vector2(0, -20)
+texture = ExtResource("5")
+centered = false
+
+[node name="Ground" type="StaticBody2D" parent="."]
+position = Vector2(0, 56)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground"]
+shape = SubResource("1")
+
+[node name="PlatformLeft" type="StaticBody2D" parent="."]
+position = Vector2(-160, -10)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlatformLeft"]
+shape = SubResource("2")
+
+[node name="PlatformRight" type="StaticBody2D" parent="."]
+position = Vector2(140, -40)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlatformRight"]
+shape = SubResource("2")
+
+[node name="Player" parent="." instance=ExtResource("1")]
+position = Vector2(-180, -40)
