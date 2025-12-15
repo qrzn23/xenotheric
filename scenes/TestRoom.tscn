@@ -1,85 +1,28 @@
-[gd_scene load_steps=13 format=3]
+[gd_scene load_steps=5 format=4 uid="uid://e7v1wkgdxcq2"]
 
-[ext_resource type="PackedScene" path="res://scenes/player/Player.tscn" id="1"]
-[ext_resource type="Texture2D" path="res://assets/environment/layers/background.png" id="2"]
-[ext_resource type="Texture2D" path="res://assets/environment/layers/middleground.png" id="3"]
-[ext_resource type="Texture2D" path="res://assets/environment/layers/walls.png" id="4"]
-[ext_resource type="Texture2D" path="res://assets/environment/layers/props.png" id="5"]
-[ext_resource type="PackedScene" path="res://scenes/core/CameraRig.tscn" id="6"]
-[ext_resource type="Texture2D" path="res://assets/environment/layers/tilesets.png" id="7"]
-[ext_resource type="Script" path="res://scripts/rooms/TestRoomGround.gd" id="8"]
-
-[sub_resource type="RectangleShape2D" id="101"]
-size = Vector2(2000, 40)
-[sub_resource type="ConvexPolygonShape2D" id="105"]
-points = PackedVector2Array(0, 0, 16, 0, 16, 16, 0, 16)
-[sub_resource type="TileSetAtlasSource" id="104"]
-texture = ExtResource("7")
-texture_region_size = Vector2i(16, 16)
-0/0/size = Vector2i(1, 1)
-0/0/texture_region = Rect2i(0, 0, 16, 16)
-0/0/physics_layer_0/shape = SubResource(105)
-[sub_resource type="TileSet" id="103"]
-physics_layer_0/collision_layer = 1
-physics_layer_0/collision_mask = 1
-sources/0 = SubResource(104)
+[ext_resource type="PackedScene" uid="uid://bjs2t8lavsvev" path="res://scenes/player/Player.tscn" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/core/CameraRig.tscn" id="2"]
+[ext_resource type="TileSet" uid="uid://ckcmbktqx11f8" path="res://assets/tilesets/EnvironmentTileset.tres" id="3"]
+[ext_resource type="Script" uid="uid://cb7l1ynf8evm3" path="res://scripts/rooms/TestRoomController.gd" id="5"]
 
 [node name="TestRoom" type="Node2D"]
 
-[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
-scroll_base_scale = Vector2(1, 1)
+[node name="Controller" type="Node" parent="."]
+script = ExtResource("5")
+ground_tiles_path = NodePath("")
 
-[node name="BG" type="ParallaxLayer" parent="ParallaxBackground"]
-motion_scale = Vector2(0.2, 0.2)
+[node name="TileMapLayer" type="TileMapLayer" parent="."]
+tile_map_data = PackedByteArray("AAAAAAMAAAAFAAMAAAAAAAQAAAAFAAQAAAABAAMAAAAGAAMAAAABAAQAAAAGAAQAAAAAAAcAAAACAAEAAAABAAcAAAADAAEAAAACAAcAAAAEAAEAAAADAAcAAAAFAAEAAAAEAAcAAAAGAAEAAAAFAAcAAAACAAEAAAAGAAcAAAADAAEAAAAHAAcAAAAEAAEAAAAIAAcAAAAFAAEAAAAJAAcAAAAGAAEAAAAKAAcAAAACAAEAAAALAAcAAAADAAEAAAAMAAcAAAAEAAEAAAANAAcAAAAFAAEAAAAOAAcAAAAGAAEAAAAPAAcAAAACAAEAAAAQAAcAAAADAAEAAAARAAcAAAAEAAEAAAASAAcAAAAFAAEAAAATAAcAAAAGAAEAAAA=")
+tile_set = ExtResource("3")
 
-[node name="Background" type="Sprite2D" parent="ParallaxBackground/BG"]
-position = Vector2(0, -40)
-texture = ExtResource("2")
-centered = false
-
-[node name="MG" type="ParallaxLayer" parent="ParallaxBackground"]
-motion_scale = Vector2(0.5, 0.5)
-
-[node name="Middleground" type="Sprite2D" parent="ParallaxBackground/MG"]
-position = Vector2(0, -20)
-texture = ExtResource("3")
-centered = false
-
-[node name="WallsLayer" type="ParallaxLayer" parent="ParallaxBackground"]
-motion_scale = Vector2(1, 1)
-
-[node name="Walls" type="Sprite2D" parent="ParallaxBackground/WallsLayer"]
-position = Vector2(0, 0)
-texture = ExtResource("4")
-centered = false
-
-[node name="PropsLayer" type="ParallaxLayer" parent="ParallaxBackground"]
-motion_scale = Vector2(1.1, 1.1)
-
-[node name="Props" type="Sprite2D" parent="ParallaxBackground/PropsLayer"]
-position = Vector2(0, 0)
-texture = ExtResource("5")
-centered = false
-
-[node name="Ground" type="StaticBody2D" parent="."]
-position = Vector2(0, 320)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground"]
-shape = SubResource(101)
-
-[node name="GroundTiles" type="TileMap" parent="."]
-position = Vector2(0, 304)
-tile_set = SubResource(103)
-cell_quadrant_size = 16
-script = ExtResource("8")
-width_tiles = 200
-collision_layer = 1
-collision_mask = 1
-format = 1
+[node name="PlayerSpawn" type="Marker2D" parent="."]
+position = Vector2(240, 88)
 
 [node name="Player" parent="." instance=ExtResource("1")]
-position = Vector2(120, 120)
+position = Vector2(88, 96)
 
-[node name="CameraRig" parent="." instance=ExtResource("6")]
-position = Vector2(120, 120)
+[node name="CameraRig" parent="." instance=ExtResource("2")]
+position = Vector2(56, 104)
 target_path = NodePath("../Player")
+
+[node name="UI" type="CanvasLayer" parent="."]

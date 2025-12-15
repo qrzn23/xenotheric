@@ -9,7 +9,7 @@ Lightweight Metroidvania prototype built with Godot 4. Playable scenes live in `
   The `--quit-after` timer can print a harmless leak warning.
 
 ## Scenes
-- `scenes/TestRoom.tscn`: quick local scene with parallax backdrop, ground/platform colliders, and the player spawned in with a following camera for manual checks.
+- `scenes/TestRoom.tscn`: quick local scene with a TileMap floor, player spawn, and a following camera for manual checks.
 
 ## Tests in this repo
 - `tests/test_game_state.gd`: health/missile signals, clamping, ability unlocks.

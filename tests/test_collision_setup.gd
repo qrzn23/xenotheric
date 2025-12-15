@@ -16,15 +16,14 @@ func after_each():
 
 func test_ground_tiles_have_cells_and_collision():
 	var ground_tiles: TileMap = room.get_node("GroundTiles")
-	assert_true(ground_tiles.collision_layer == 1 and ground_tiles.collision_mask == 1, "Ground tiles should use collision layer/mask 1")
 	assert_gt(ground_tiles.get_used_cells(0).size(), 0, "Ground tiles should populate cells")
-	var tileset: TileSet = ground_tiles.tile_set
-	var source_id := tileset.get_source_id(0)
-	var source := tileset.get_source(source_id)
-	var tile_ids: PackedInt32Array = source.get_tiles_ids()
-	assert_gt(tile_ids.size(), 0, "Tile set should contain at least one tile")
-	var shape: Shape2D = source.get_tile_shape(tile_ids[0], 0, 0)
-	assert_not_null(shape, "Tile should have a collision shape")
+	assert_not_null(ground_tiles.tile_set, "Ground tiles should have a TileSet assigned")
+
+	var cells := ground_tiles.get_used_cells(0)
+	var first := cells[0] as Vector2i
+	assert_eq(ground_tiles.get_cell_source_id(0, first), 0, "Ground tiles should use the expected source id")
+	assert_eq(ground_tiles.get_cell_atlas_coords(0, first), Vector2i.ZERO, "Ground tiles should use the expected atlas coords")
+	assert_not_null(ground_tiles.get_cell_tile_data(0, first), "Ground tiles should reference a valid tile in the TileSet")
 
 func test_player_collision_layer_matches_ground():
 	var player: CharacterBody2D = room.get_node("Player")

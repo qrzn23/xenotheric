@@ -31,6 +31,8 @@ settings/stdout/print_fps=true
 window/size/viewport_width=1280
 window/size/viewport_height=720
 window/stretch/mode="viewport"
+window/stretch/scale=2.0
+window/stretch/scale_mode="integer"
 
 [input]
 
@@ -39,6 +41,9 @@ move_left={
 "events": [{
 "index": 14,
 "type": "joy_button"
+}, {
+"scancode": 65,
+"type": "key"
 }, {
 "scancode": 16777231,
 "type": "key"
@@ -49,6 +54,9 @@ move_right={
 "events": [{
 "index": 15,
 "type": "joy_button"
+}, {
+"scancode": 68,
+"type": "key"
 }, {
 "scancode": 16777233,
 "type": "key"

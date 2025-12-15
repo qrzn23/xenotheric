@@ -28,6 +28,8 @@ var _invuln_flash_phase := 0.0
 var _last_anim_logged := ""
 var _test_force_on_floor := false
 
+@export var debug_logs_enabled := false
+
 const BULLET_SCENE := preload("res://scenes/props/Bullet.tscn")
 const MISSILE_SCENE := preload("res://scenes/props/Missile.tscn")
 
@@ -144,7 +146,12 @@ func _fire_bullet() -> void:
     var bullet := BULLET_SCENE.instantiate()
     bullet.global_position = global_position + Vector2(12 * _facing, -6)
     bullet.direction = _facing
-    get_tree().current_scene.add_child(bullet)
+    var parent := get_parent()
+    if not parent:
+        parent = get_tree().current_scene
+    if not parent:
+        parent = get_tree().root
+    parent.add_child(bullet)
     fired.emit(Vector2(_facing, 0))
 
 func _fire_missile() -> void:
@@ -153,7 +160,12 @@ func _fire_missile() -> void:
     var missile := MISSILE_SCENE.instantiate()
     missile.global_position = global_position + Vector2(12 * _facing, -6)
     missile.direction = _facing
-    get_tree().current_scene.add_child(missile)
+    var parent := get_parent()
+    if not parent:
+        parent = get_tree().current_scene
+    if not parent:
+        parent = get_tree().root
+    parent.add_child(missile)
     missile_fired.emit(Vector2(_facing, 0))
 
 func take_damage(amount: int) -> void:
@@ -212,7 +224,7 @@ func _set_test_on_floor(value: bool) -> void:
     _test_force_on_floor = value
 
 func _log_inputs() -> void:
-    if not OS.is_debug_build():
+    if not debug_logs_enabled:
         return
     if Input.is_action_just_pressed("move_left"):
         print("input: move_left pressed")
@@ -230,7 +242,7 @@ func _log_inputs() -> void:
         print("input: morph pressed")
 
 func _log_anim(name: String) -> void:
-    if not OS.is_debug_build():
+    if not debug_logs_enabled:
         return
     if name != _last_anim_logged:
         print("anim:", name)
