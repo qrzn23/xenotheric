@@ -21,6 +21,7 @@ config/features=PackedStringArray("4.5")
 GameState="*res://scripts/core/GameState.gd"
 Pause="*res://scripts/core/Pause.gd"
 CameraRig="*res://scripts/core/CameraRig.gd"
+InputDefaults="*res://scripts/core/InputDefaults.gd"
 
 [debug]
 
@@ -42,10 +43,10 @@ move_left={
 "index": 14,
 "type": "joy_button"
 }, {
-"scancode": 65,
+"physical_keycode": 65,
 "type": "key"
 }, {
-"scancode": 16777231,
+"physical_keycode": 16777231,
 "type": "key"
 }]
 }
@@ -55,10 +56,10 @@ move_right={
 "index": 15,
 "type": "joy_button"
 }, {
-"scancode": 68,
+"physical_keycode": 68,
 "type": "key"
 }, {
-"scancode": 16777233,
+"physical_keycode": 16777233,
 "type": "key"
 }]
 }
@@ -68,7 +69,7 @@ move_up={
 "index": 12,
 "type": "joy_button"
 }, {
-"scancode": 16777232,
+"physical_keycode": 16777232,
 "type": "key"
 }]
 }
@@ -78,7 +79,7 @@ move_down={
 "index": 13,
 "type": "joy_button"
 }, {
-"scancode": 16777234,
+"physical_keycode": 16777234,
 "type": "key"
 }]
 }
@@ -88,7 +89,7 @@ jump={
 "index": 0,
 "type": "joy_button"
 }, {
-"scancode": 32,
+"physical_keycode": 32,
 "type": "key"
 }]
 }
@@ -98,7 +99,7 @@ fire={
 "index": 2,
 "type": "joy_button"
 }, {
-"scancode": 70,
+"physical_keycode": 70,
 "type": "key"
 }]
 }
@@ -108,7 +109,7 @@ missile={
 "index": 5,
 "type": "joy_button"
 }, {
-"scancode": 82,
+"physical_keycode": 82,
 "type": "key"
 }]
 }
@@ -118,7 +119,7 @@ dash={
 "index": 1,
 "type": "joy_button"
 }, {
-"scancode": 16,
+"physical_keycode": 16,
 "type": "key"
 }]
 }
@@ -128,7 +129,7 @@ morph={
 "index": 4,
 "type": "joy_button"
 }, {
-"scancode": 83,
+"physical_keycode": 83,
 "type": "key"
 }]
 }
@@ -138,7 +139,7 @@ pause={
 "index": 7,
 "type": "joy_button"
 }, {
-"scancode": 16777217,
+"physical_keycode": 16777217,
 "type": "key"
 }]
 }

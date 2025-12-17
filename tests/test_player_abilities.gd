@@ -6,8 +6,6 @@ class WallJumpPlayer:
         return true
     func _get_wall_normal() -> Vector2:
         return Vector2(-1, 0)
-    func move_and_slide():
-        pass
 
 var world: Node
 var player: CharacterBody2D

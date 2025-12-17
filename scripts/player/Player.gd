@@ -27,6 +27,7 @@ var _facing := 1
 var _invuln_flash_phase := 0.0
 var _last_anim_logged := ""
 var _test_force_on_floor := false
+var _move_input_dir := 0.0
 
 @export var debug_logs_enabled := false
 
@@ -61,7 +62,8 @@ func _update_invuln_flash(delta: float) -> void:
     _set_sprite_modulate(Color(1, 1, 1, clamp(alpha, 0.2, 0.7)))
 
 func _handle_input(delta: float) -> void:
-    var dir := Input.get_action_strength("move_right") - Input.get_action_strength("move_left")
+    var dir := _get_move_dir()
+    _move_input_dir = dir
     var desired := dir * move_speed
     _log_inputs()
 
@@ -91,6 +93,22 @@ func _handle_input(delta: float) -> void:
     if Input.is_action_just_pressed("missile") and GameState.has_ability("missile"):
         _fire_missile()
 
+func _get_move_dir() -> float:
+    var left_has := _action_has_events(&"move_left")
+    var right_has := _action_has_events(&"move_right")
+    if left_has or right_has:
+        return Input.get_action_strength("move_right") - Input.get_action_strength("move_left")
+
+    var dir := 0.0
+    if Input.is_key_pressed(KEY_A) or Input.is_key_pressed(KEY_LEFT):
+        dir -= 1.0
+    if Input.is_key_pressed(KEY_D) or Input.is_key_pressed(KEY_RIGHT):
+        dir += 1.0
+    return dir
+
+func _action_has_events(action_name: StringName) -> bool:
+    return InputMap.has_action(action_name) and InputMap.action_get_events(action_name).size() > 0
+
 func _perform_jump() -> void:
     if _is_touching_wall() and GameState.has_ability("wall_jump"):
         var normal := _get_wall_normal()
@@ -104,7 +122,8 @@ func _apply_gravity(delta: float) -> void:
     if not is_on_floor():
         velocity.y = min(velocity.y + gravity * delta, max_fall_speed)
     else:
-        velocity.y = 0 if velocity.y < 0 else velocity.y
+        if velocity.y > 0:
+            velocity.y = 0
 
 func _move_and_slide() -> void:
     move_and_slide()
@@ -202,7 +221,7 @@ func _update_animation() -> void:
         anim = "dash"
     elif not _is_considered_on_floor():
         anim = "jump" if velocity.y < 0 else "fall"
-    elif abs(velocity.x) > 1:
+    elif abs(_move_input_dir) > 0.01:
         anim = "run"
 
     _play_anim($Sprite2D, anim)

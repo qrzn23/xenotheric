@@ -12,7 +12,7 @@ func before_each():
 
 func test_run_animation_when_moving():
 	player._set_test_on_floor(true)
-	player.velocity.x = 120
+	player._move_input_dir = 1.0
 	player._update_animation()
 	assert_eq(player.get_node("Sprite2D").animation, "run")
 

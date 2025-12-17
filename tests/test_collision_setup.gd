@@ -25,7 +25,7 @@ func test_ground_tiles_have_cells_and_collision():
 	var ground := _get_ground()
 	assert_not_null(ground, "TestRoom should have a TileMapLayer (preferred) or GroundTiles TileMap")
 
-	var tile_set := ground.get("tile_set")
+	var tile_set: TileSet = ground.get("tile_set") as TileSet
 	assert_not_null(tile_set, "Ground should have a TileSet assigned")
 
 	var used_cells: Array[Vector2i] = []
