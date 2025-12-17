@@ -1,13 +1,38 @@
 [gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/props/Bullet.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/sprites/Fx/shot/shot-1.png" id="2"]
+[ext_resource type="Texture2D" path="res://assets/sprites/Fx/shot/shot-2.png" id="3"]
 
 [sub_resource type="CircleShape2D" id="1"]
 radius = 4.0
+
+[sub_resource type="SpriteFrames" id="2"]
+animations = [{
+"frames": [{
+"duration": 0.06,
+"texture": ExtResource("2")
+}, {
+"duration": 0.06,
+"texture": ExtResource("3")
+}],
+"loop": true,
+"name": &"default",
+"speed": 16.0
+}]
 
 [node name="Bullet" type="Area2D"]
 script = ExtResource("1")
 monitoring = true
 
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("2")
+animation = &"default"
+autoplay = "default"
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("1")
+
+[connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="_on_screen_exited"]

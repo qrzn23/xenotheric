@@ -32,6 +32,7 @@ var _test_force_on_floor := false
 var _move_input_dir := 0.0
 var _aiming_up := false
 var _ducking := false
+var _sprite: AnimatedSprite2D
 
 @export var debug_logs_enabled := false
 
@@ -39,6 +40,8 @@ const BULLET_SCENE := preload("res://scenes/props/Bullet.tscn")
 const MISSILE_SCENE := preload("res://scenes/props/Missile.tscn")
 
 func _ready() -> void:
+    add_to_group("player")
+    _sprite = $Sprite2D as AnimatedSprite2D
     set_physics_process(true)
 
 func _physics_process(delta: float) -> void:
@@ -187,7 +190,7 @@ func _toggle_morph() -> void:
 func _fire_bullet() -> void:
     var bullet := BULLET_SCENE.instantiate()
     var dir := _get_fire_dir()
-    bullet.global_position = global_position + _get_bullet_spawn_offset(dir)
+    bullet.global_position = _get_bullet_spawn_position(dir)
     bullet.direction = dir
     var parent := get_parent()
     if not parent:
@@ -202,10 +205,20 @@ func _get_fire_dir() -> Vector2:
         return Vector2.UP
     return Vector2(_facing, 0)
 
-func _get_bullet_spawn_offset(dir: Vector2) -> Vector2:
-    if dir.y < -0.5:
-        return Vector2(8 * _facing, -32)
-    return Vector2(20 * _facing, -24)
+func _get_bullet_spawn_position(dir: Vector2) -> Vector2:
+    var base_offset := Vector2(20, -24)
+    if dir.y < -0.5 and has_node("NozzleUp"):
+        base_offset = $NozzleUp.position
+    elif has_node("WeaponSpawn"):
+        base_offset = $WeaponSpawn.position
+
+    # Mirror around the sprite pivot when facing left. The sprite is flipped via
+    # `flip_h`, which mirrors visuals around the sprite node position (not the
+    # player origin).
+    var x := base_offset.x
+    if _facing < 0 and _sprite:
+        x = 2.0 * _sprite.position.x - x
+    return global_position + Vector2(x, base_offset.y)
 
 func _fire_missile() -> void:
     if not GameState.spend_missile():

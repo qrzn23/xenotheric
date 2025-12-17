@@ -60,9 +60,15 @@ func test_bullet_deals_damage_and_frees_on_hit():
     var target := DummyBody.new()
     add_child_autofree(target)
     add_child_autofree(bullet)
+    # Bullet now spawns an impact Node2D on hit; ensure it has a parent.
+    await get_tree().process_frame
     bullet._on_Bullet_body_entered(target)
     assert_eq(target.damage_taken, [5], "bullet should deal 5 damage on hit")
     assert_true(bullet.is_queued_for_deletion(), "bullet queues free after impact")
+    await get_tree().process_frame
+    var impacts := get_tree().get_nodes_in_group("impact_fx")
+    assert_eq(impacts.size(), 1, "impact FX should be spawned on bullet hit")
+    impacts[0].queue_free()
 
 func test_missile_explodes_and_damages_overlaps():
     var missile := MissileDouble.new()
