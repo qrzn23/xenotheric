@@ -364,7 +364,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_p3v13")
 }],
 "loop": true,
-"name": &"run_shoot",
+"name": &"shoot_run",
 "speed": 10.0
 }, {
 "frames": [{
@@ -378,7 +378,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_ktadw")
 }],
 "loop": true,
-"name": &"shoot stand",
+"name": &"shoot_stand",
 "speed": 5.0
 }, {
 "frames": [{
@@ -386,7 +386,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_7r4bu")
 }],
 "loop": true,
-"name": &"shootup",
+"name": &"shoot_up",
 "speed": 5.0
 }]
 
@@ -422,8 +422,7 @@ shape = SubResource("1")
 [node name="Sprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(16, -24)
 sprite_frames = SubResource("2")
-animation = &"shoot stand"
-frame_progress = 0.8449211
+animation = &"shoot_up"
 
 [node name="MorphSprite2D" type="AnimatedSprite2D" parent="."]
 visible = false

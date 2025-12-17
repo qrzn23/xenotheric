@@ -15,12 +15,14 @@ signal died
 @export var wall_jump_force := Vector2(320, 560)
 @export var dash_speed := 520.0
 @export var dash_time := 0.2
+@export var shoot_hold_time := 0.12
 @export var morph_height := 24.0
 @export var stand_height := 48.0
 
 var _coyote_timer := 0.0
 var _jump_buffer := 0.0
 var _dash_timer := 0.0
+var _shoot_timer := 0.0
 var _invuln_timer := 0.0
 var _morph := false
 var _facing := 1
@@ -28,6 +30,8 @@ var _invuln_flash_phase := 0.0
 var _last_anim_logged := ""
 var _test_force_on_floor := false
 var _move_input_dir := 0.0
+var _aiming_up := false
+var _ducking := false
 
 @export var debug_logs_enabled := false
 
@@ -50,6 +54,7 @@ func _update_timers(delta: float) -> void:
     _coyote_timer = max(_coyote_timer - delta, 0)
     _jump_buffer = max(_jump_buffer - delta, 0)
     _dash_timer = max(_dash_timer - delta, 0)
+    _shoot_timer = max(_shoot_timer - delta, 0)
     _invuln_timer = max(_invuln_timer - delta, 0)
     if _invuln_timer <= 0:
         _reset_invuln_flash()
@@ -64,8 +69,13 @@ func _update_invuln_flash(delta: float) -> void:
 func _handle_input(delta: float) -> void:
     var dir := _get_move_dir()
     _move_input_dir = dir
+    _ducking = _is_ducking_input()
+    _aiming_up = _is_aiming_up_input()
     var desired := dir * move_speed
     _log_inputs()
+
+    if _ducking:
+        desired = 0.0
 
     if _dash_timer > 0:
         velocity.x = lerp(velocity.x, _facing * dash_speed, 0.3)
@@ -88,10 +98,19 @@ func _handle_input(delta: float) -> void:
     if Input.is_action_just_pressed("morph"):
         _toggle_morph()
 
+    if Input.is_action_pressed("fire"):
+        _shoot_timer = max(_shoot_timer, shoot_hold_time)
+
     if Input.is_action_just_pressed("fire"):
         _fire_bullet()
     if Input.is_action_just_pressed("missile") and GameState.has_ability("missile"):
         _fire_missile()
+
+func _is_ducking_input() -> bool:
+    return not _morph and _is_considered_on_floor() and Input.is_action_pressed("move_down")
+
+func _is_aiming_up_input() -> bool:
+    return not _morph and not _ducking and Input.is_action_pressed("move_up")
 
 func _get_move_dir() -> float:
     var left_has := _action_has_events(&"move_left")
@@ -167,15 +186,26 @@ func _toggle_morph() -> void:
 
 func _fire_bullet() -> void:
     var bullet := BULLET_SCENE.instantiate()
-    bullet.global_position = global_position + Vector2(12 * _facing, -6)
-    bullet.direction = _facing
+    var dir := _get_fire_dir()
+    bullet.global_position = global_position + _get_bullet_spawn_offset(dir)
+    bullet.direction = dir
     var parent := get_parent()
     if not parent:
         parent = get_tree().current_scene
     if not parent:
         parent = get_tree().root
     parent.add_child(bullet)
-    fired.emit(Vector2(_facing, 0))
+    fired.emit(dir)
+
+func _get_fire_dir() -> Vector2:
+    if _aiming_up:
+        return Vector2.UP
+    return Vector2(_facing, 0)
+
+func _get_bullet_spawn_offset(dir: Vector2) -> Vector2:
+    if dir.y < -0.5:
+        return Vector2(8 * _facing, -32)
+    return Vector2(20 * _facing, -24)
 
 func _fire_missile() -> void:
     if not GameState.spend_missile():
@@ -225,6 +255,12 @@ func _update_animation() -> void:
         anim = "dash"
     elif not _is_considered_on_floor():
         anim = "jump" if velocity.y < 0 else "fall"
+    elif _ducking:
+        anim = "duck"
+    elif _aiming_up:
+        anim = "shoot_up"
+    elif _shoot_timer > 0:
+        anim = "shoot_run" if abs(_move_input_dir) > 0.01 else "shoot_stand"
     elif abs(_move_input_dir) > 0.01:
         anim = "run"
 

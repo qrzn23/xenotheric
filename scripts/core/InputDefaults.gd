@@ -3,13 +3,13 @@ extends Node
 const _DEFAULT_KEYS: Dictionary = {
 	"move_left": [KEY_A, KEY_LEFT],
 	"move_right": [KEY_D, KEY_RIGHT],
-	"move_up": [KEY_UP],
-	"move_down": [KEY_DOWN],
+	"move_up": [KEY_W, KEY_UP],
+	"move_down": [KEY_S, KEY_DOWN],
 	"jump": [KEY_SPACE],
 	"fire": [KEY_F],
 	"missile": [KEY_R],
 	"dash": [KEY_SHIFT],
-	"morph": [KEY_S],
+	"morph": [KEY_C],
 	"pause": [KEY_ESCAPE],
 }
 
@@ -43,4 +43,3 @@ func _has_key(action_name: StringName, key: int) -> bool:
 		if key_event.physical_keycode == key or key_event.keycode == key:
 			return true
 	return false
-

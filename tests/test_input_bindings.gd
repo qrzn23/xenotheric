@@ -3,11 +3,13 @@ extends "res://addons/gut/test.gd"
 const _REQUIRED_ACTIONS: Dictionary = {
 	"move_left": KEY_A,
 	"move_right": KEY_D,
+	"move_up": KEY_W,
+	"move_down": KEY_S,
 	"jump": KEY_SPACE,
 	"fire": KEY_F,
 	"missile": KEY_R,
 	"dash": KEY_SHIFT,
-	"morph": KEY_S,
+	"morph": KEY_C,
 	"pause": KEY_ESCAPE,
 }
 
@@ -24,4 +26,3 @@ func test_actions_exist_and_have_keyboard_defaults():
 				has_key = true
 				break
 		assert_true(has_key, "Action %s missing key %s" % [action_name, required_key])
-

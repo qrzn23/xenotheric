@@ -69,6 +69,9 @@ move_up={
 "index": 12,
 "type": "joy_button"
 }, {
+"physical_keycode": 87,
+"type": "key"
+}, {
 "physical_keycode": 16777232,
 "type": "key"
 }]
@@ -78,6 +81,9 @@ move_down={
 "events": [{
 "index": 13,
 "type": "joy_button"
+}, {
+"physical_keycode": 83,
+"type": "key"
 }, {
 "physical_keycode": 16777234,
 "type": "key"
@@ -129,7 +135,7 @@ morph={
 "index": 4,
 "type": "joy_button"
 }, {
-"physical_keycode": 83,
+"physical_keycode": 67,
 "type": "key"
 }]
 }
