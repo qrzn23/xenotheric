@@ -7,12 +7,12 @@ signal died
 
 @export var move_speed := 220.0
 @export var accel := 12.0
-@export var jump_force := 420.0
+@export var jump_force := 560.0
 @export var gravity := 1300.0
 @export var max_fall_speed := 900.0
 @export var coyote_time := 0.12
 @export var jump_buffer := 0.15
-@export var wall_jump_force := Vector2(320, 420)
+@export var wall_jump_force := Vector2(320, 560)
 @export var dash_speed := 520.0
 @export var dash_time := 0.2
 @export var morph_height := 24.0
@@ -143,10 +143,14 @@ func _is_touching_wall() -> bool:
     return is_on_wall()
 
 func _get_wall_normal() -> Vector2:
-    for i in get_slide_collision_count():
+    var collision_count := get_slide_collision_count()
+    for i in range(collision_count):
         var col := get_slide_collision(i)
-        if abs(col.normal.x) > 0.5:
-            return col.normal
+        if col == null:
+            continue
+        var normal := col.get_normal()
+        if abs(normal.x) > 0.5:
+            return normal
     return Vector2.ZERO
 
 func _toggle_morph() -> void:
