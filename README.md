@@ -3,13 +3,13 @@
 Lightweight Metroidvania prototype built with Godot 4. Playable scenes live in `scenes/`, gameplay scripts in `scripts/`, and tests in `tests/` (GUT).
 
 ## Run
-- Play locally: `godot4 --path .` then run the main scene.
-- Syntax check: `godot4 --path . --headless --check-only`
-- Tests (GUT): `godot4 --path . --headless -s res://addons/gut/gut_cmdln.gd -gdir=res://tests --rendering-driver opengl3 --quit-after 1`  
-  The `--quit-after` timer can print a harmless leak warning.
+- Play locally: `godot --path . --rendering-driver opengl3`
+- Syntax check: `godot --path . --headless --check-only`
+- Tests (GUT): `godot --path . --headless -s res://addons/gut/gut_cmdln.gd -gdir=res://tests -gexit --rendering-driver opengl3`  
+  Prefer `-gexit` over `--quit-after` so the run exits only after the suite finishes (avoids “leaked instances/resources” messages from forced shutdown).
 
 ## Scenes
-- `scenes/TestRoom.tscn`: quick local scene with a TileMap floor, player spawn, and a following camera for manual checks.
+- `scenes/TestRoom.tscn`: quick local scene with a TileMapLayer floor, player spawn, and a following camera for manual checks.
 
 ## Tests in this repo
 - `tests/test_game_state.gd`: health/missile signals, clamping, ability unlocks.

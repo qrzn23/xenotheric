@@ -9,6 +9,7 @@ builds/
 .vs/
 *.uid
 *.import
+gut.log
 
 # OS-specific cruft
 .DS_Store

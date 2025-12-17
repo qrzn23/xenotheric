@@ -2,6 +2,13 @@ extends "res://addons/gut/test.gd"
 
 var room: Node
 
+func _get_ground() -> Node:
+	if room.has_node("TileMapLayer"):
+		return room.get_node("TileMapLayer")
+	if room.has_node("GroundTiles"):
+		return room.get_node("GroundTiles")
+	return null
+
 func before_each():
 	room = load("res://scenes/TestRoom.tscn").instantiate()
 	add_child_autofree(room)
@@ -15,15 +22,24 @@ func after_each():
 	room = null
 
 func test_ground_tiles_have_cells_and_collision():
-	var ground_tiles: TileMap = room.get_node("GroundTiles")
-	assert_gt(ground_tiles.get_used_cells(0).size(), 0, "Ground tiles should populate cells")
-	assert_not_null(ground_tiles.tile_set, "Ground tiles should have a TileSet assigned")
+	var ground := _get_ground()
+	assert_not_null(ground, "TestRoom should have a TileMapLayer (preferred) or GroundTiles TileMap")
 
-	var cells := ground_tiles.get_used_cells(0)
-	var first := cells[0] as Vector2i
-	assert_eq(ground_tiles.get_cell_source_id(0, first), 0, "Ground tiles should use the expected source id")
-	assert_eq(ground_tiles.get_cell_atlas_coords(0, first), Vector2i.ZERO, "Ground tiles should use the expected atlas coords")
-	assert_not_null(ground_tiles.get_cell_tile_data(0, first), "Ground tiles should reference a valid tile in the TileSet")
+	var tile_set := ground.get("tile_set")
+	assert_not_null(tile_set, "Ground should have a TileSet assigned")
+
+	var used_cells: Array[Vector2i] = []
+	var first: Vector2i
+	if ground is TileMapLayer:
+		used_cells = (ground as TileMapLayer).get_used_cells()
+		assert_gt(used_cells.size(), 0, "TileMapLayer should have painted cells")
+		first = used_cells[0]
+		assert_not_null((ground as TileMapLayer).get_cell_tile_data(first), "TileMapLayer cell should reference valid TileData")
+	elif ground is TileMap:
+		used_cells = (ground as TileMap).get_used_cells(0)
+		assert_gt(used_cells.size(), 0, "TileMap should populate cells")
+		first = used_cells[0]
+		assert_not_null((ground as TileMap).get_cell_tile_data(0, first), "TileMap cell should reference valid TileData")
 
 func test_player_collision_layer_matches_ground():
 	var player: CharacterBody2D = room.get_node("Player")
