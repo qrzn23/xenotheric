@@ -69,6 +69,8 @@ func test_bullet_deals_damage_and_frees_on_hit():
     var impacts := get_tree().get_nodes_in_group("impact_fx")
     assert_eq(impacts.size(), 1, "impact FX should be spawned on bullet hit")
     impacts[0].queue_free()
+    await get_tree().process_frame
+    await get_tree().process_frame
 
 func test_missile_explodes_and_damages_overlaps():
     var missile := MissileDouble.new()
