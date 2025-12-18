@@ -1,9 +1,12 @@
 extends Node
 
+const PAUSE_MENU_SCENE := preload("res://scenes/ui/PauseMenu.tscn")
+
 @export var start_in_menu: bool = true
 @export_file("*.tscn") var start_room_scene: String = "res://scenes/TestRoom.tscn"
 @export_file("*.tscn") var start_game_scene: String = "res://scenes/TestRoom2.tscn"
 @export_file("*.tscn") var test_room_scene: String = "res://scenes/TestRoom.tscn"
+@export_file("*.tscn") var test_room_2_scene: String = "res://scenes/TestRoom2.tscn"
 @export_file("*.tscn") var menu_scene: String = "res://scenes/ui/MainMenu.tscn"
 
 @onready var world: Node = $World
@@ -11,9 +14,13 @@ extends Node
 
 var _current_room: Node = null
 var _menu: Control = null
+var _pause_menu: CanvasLayer = null
+var _mouse_mode_before_pause: int = Input.MOUSE_MODE_VISIBLE
 
 func _ready() -> void:
 	add_to_group("scene_router")
+	process_mode = Node.PROCESS_MODE_ALWAYS
+	world.process_mode = Node.PROCESS_MODE_PAUSABLE
 	if start_in_menu:
 		hud.visible = false
 		_show_menu()
@@ -27,6 +34,7 @@ func change_room(destination_scene: String, destination_spawn: StringName = &"")
 	call_deferred("_change_room_impl", destination_scene, destination_spawn)
 
 func _change_room_impl(destination_scene: String, destination_spawn: StringName) -> void:
+	_close_pause_menu()
 	if destination_spawn != &"":
 		GameState.pending_spawn = destination_spawn
 
@@ -67,7 +75,12 @@ func _connect_room_doors(room: Node) -> void:
 func _on_transition_requested(destination_scene: String, destination_spawn: StringName) -> void:
 	change_room(destination_scene, destination_spawn)
 
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("pause"):
+		_toggle_pause_menu()
+
 func _show_menu() -> void:
+	_close_pause_menu()
 	if _menu and is_instance_valid(_menu):
 		_menu.queue_free()
 		_menu = null
@@ -89,8 +102,48 @@ func _on_menu_mode_selected(mode: StringName) -> void:
 		_menu.queue_free()
 		_menu = null
 	hud.visible = true
-	var scene := test_room_scene if mode == &"test" else start_game_scene
+	var scene := start_game_scene
+	if mode == &"test1":
+		scene = test_room_scene
+	elif mode == &"test2":
+		scene = test_room_2_scene
 	change_room(scene, &"")
 
 func _on_menu_quit_requested() -> void:
 	get_tree().quit()
+
+func _toggle_pause_menu() -> void:
+	if _menu and is_instance_valid(_menu):
+		return
+	if _pause_menu and is_instance_valid(_pause_menu):
+		_close_pause_menu()
+		return
+	_open_pause_menu()
+
+func _open_pause_menu() -> void:
+	_mouse_mode_before_pause = Input.mouse_mode
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	if not Pause.is_paused:
+		Pause.toggle_pause()
+	_pause_menu = PAUSE_MENU_SCENE.instantiate() as CanvasLayer
+	_pause_menu.name = "PauseMenu"
+	add_child(_pause_menu)
+	if _pause_menu.has_signal("continue_requested"):
+		_pause_menu.connect("continue_requested", Callable(self, "_close_pause_menu"))
+	if _pause_menu.has_signal("main_menu_requested"):
+		_pause_menu.connect("main_menu_requested", Callable(self, "return_to_main_menu"))
+	if _pause_menu.has_signal("quit_requested"):
+		_pause_menu.connect("quit_requested", Callable(self, "_on_menu_quit_requested"))
+
+func _close_pause_menu() -> void:
+	if _pause_menu and is_instance_valid(_pause_menu):
+		_pause_menu.queue_free()
+		_pause_menu = null
+	Input.mouse_mode = _mouse_mode_before_pause
+	Pause.unpause()
+
+func return_to_main_menu() -> void:
+	_close_pause_menu()
+	hud.visible = false
+	change_room("", &"")
+	_show_menu()
