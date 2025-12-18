@@ -43,6 +43,7 @@ var _invuln_flash_phase := 0.0
 var _last_anim_logged := ""
 var _test_force_on_floor := false
 var _state: int = PlayerState.IDLE
+var _air_jumps_remaining: int = 0
 
 var _sprite: AnimatedSprite2D
 var _morph_sprite: AnimatedSprite2D
@@ -100,6 +101,7 @@ func _handle_input(delta: float) -> void:
 	var on_floor := _is_considered_on_floor()
 	if on_floor:
 		_coyote_timer = coyote_time
+		_air_jumps_remaining = _get_air_jump_capacity()
 
 	var duck_input := _can_duck() and on_floor and Input.is_action_pressed("move_down")
 	var aim_up_input := _can_aim() and not duck_input and Input.is_action_pressed("move_up")
@@ -116,8 +118,7 @@ func _handle_input(delta: float) -> void:
 
 	if Input.is_action_just_pressed("jump"):
 		_jump_buffer = jump_buffer
-	if _jump_buffer > 0 and (_coyote_timer > 0 or _is_touching_wall()):
-		_perform_jump()
+	if _jump_buffer > 0 and _try_consume_jump():
 		_set_state(PlayerState.JUMP)
 
 	if Input.is_action_just_released("jump") and velocity.y < 0:
@@ -224,6 +225,21 @@ func _perform_jump() -> void:
 		velocity.y = -jump_force
 	_jump_buffer = 0
 	_coyote_timer = 0
+
+func _try_consume_jump() -> bool:
+	if _coyote_timer > 0 or _is_touching_wall():
+		_perform_jump()
+		return true
+
+	if _air_jumps_remaining > 0:
+		_air_jumps_remaining -= 1
+		_perform_jump()
+		return true
+
+	return false
+
+func _get_air_jump_capacity() -> int:
+	return 1 if GameState.has_ability("double_jump") else 0
 
 func _apply_gravity(delta: float) -> void:
 	if not is_on_floor():

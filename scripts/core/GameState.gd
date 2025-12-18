@@ -16,6 +16,7 @@ var abilities: Dictionary = {
 	"wall_jump": true,
 	"missile": true,
 	"dash": false,
+	"double_jump": false,
 	"bombs": false,
 	"charge": false,
 	"grapple": false,
