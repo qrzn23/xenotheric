@@ -18,6 +18,7 @@ var _blocker_shape: CollisionShape2D
 var _close_timer: Timer
 
 func _ready() -> void:
+    add_to_group("exit_door")
     _trigger_area = get_node_or_null("TriggerArea") as Area2D
     _hit_area = get_node_or_null("HitArea") as Area2D
     _blocker_shape = get_node_or_null("Blocker/CollisionShape2D") as CollisionShape2D
@@ -44,7 +45,11 @@ func _on_body_entered(body: Node) -> void:
     GameState.pending_spawn = destination_spawn
     transition_requested.emit(destination_scene, destination_spawn)
     if auto_transition and destination_scene != "":
-        get_tree().change_scene_to_file(destination_scene)
+        var router := get_tree().get_first_node_in_group("scene_router")
+        if router and router.has_method("change_room"):
+            router.call_deferred("change_room", destination_scene, destination_spawn)
+        else:
+            get_tree().change_scene_to_file(destination_scene)
 
 func _on_area_entered(area: Area2D) -> void:
     if not area:

@@ -5,7 +5,6 @@
 [ext_resource type="TileSet" uid="uid://ckcmbktqx11f8" path="res://assets/tilesets/EnvironmentTileset.tres" id="3"]
 [ext_resource type="PackedScene" uid="uid://d1umtvwjaheiq" path="res://scenes/enemies/Crab.tscn" id="4"]
 [ext_resource type="Script" uid="uid://cb7l1ynf8evm3" path="res://scripts/rooms/TestRoomController.gd" id="5"]
-[ext_resource type="PackedScene" path="res://scenes/ui/HUD.tscn" id="7_w3h5m"]
 [ext_resource type="PackedScene" path="res://scenes/props/ExitDoor.tscn" id="8_5y6w3"]
 
 [node name="TestRoom" type="Node2D"]
@@ -29,10 +28,6 @@ position = Vector2(328, 96)
 [node name="CameraRig" parent="." instance=ExtResource("2")]
 position = Vector2(56, 104)
 target_path = NodePath("../Player")
-
-[node name="UI" type="CanvasLayer" parent="."]
-
-[node name="HUD" parent="UI" instance=ExtResource("7_w3h5m")]
 
 [node name="ExitDoor" parent="." instance=ExtResource("8_5y6w3")]
 position = Vector2(568, 96)

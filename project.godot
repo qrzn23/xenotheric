@@ -13,7 +13,7 @@ _global_script_class_cache={}
 [application]
 
 config/name="Metroid Clone"
-run/main_scene="res://scenes/TestRoom.tscn"
+run/main_scene="res://scenes/Main.tscn"
 config/features=PackedStringArray("4.5")
 
 [autoload]
