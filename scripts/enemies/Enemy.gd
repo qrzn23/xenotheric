@@ -23,27 +23,27 @@ func take_damage(amount: int) -> void:
 		_die()
 
 func _die() -> void:
-	_spawn_death_fx()
-	_spawn_power_up()
+	var parent := get_parent()
+	var drop_pos := _get_drop_global_position()
+	# Death is often triggered from physics/collision callbacks (e.g. bullets).
+	# Spawning new physics objects during query flush can error, so defer.
+	_spawn_deferred(parent, ENEMY_DEATH_SCENE, drop_pos)
+	_spawn_deferred(parent, POWER_UP_SCENE, drop_pos)
 	died.emit()
 	queue_free()
 
-func _spawn_death_fx() -> void:
-	if not is_inside_tree():
-		return
-	var parent := get_parent()
-	if not parent:
-		return
-	var fx := ENEMY_DEATH_SCENE.instantiate() as Node2D
-	fx.global_position = global_position
-	parent.add_child(fx)
+func _get_drop_global_position() -> Vector2:
+	var drop_point := get_node_or_null("DropPoint") as Node2D
+	if drop_point:
+		return drop_point.global_position
+	var collider := get_node_or_null("CollisionShape2D") as Node2D
+	if collider:
+		return collider.global_position
+	return global_position
 
-func _spawn_power_up() -> void:
-	if not is_inside_tree():
+func _spawn_deferred(parent: Node, scene: PackedScene, pos: Vector2) -> void:
+	if not parent or not is_instance_valid(parent):
 		return
-	var parent := get_parent()
-	if not parent:
-		return
-	var power_up := POWER_UP_SCENE.instantiate() as Node2D
-	power_up.global_position = global_position
-	parent.add_child(power_up)
+	var node := scene.instantiate() as Node2D
+	node.global_position = pos
+	parent.call_deferred("add_child", node)

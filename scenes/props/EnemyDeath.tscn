@@ -40,9 +40,6 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_2nwx7")
-}, {
-"duration": 1.0,
-"texture": null
 }],
 "loop": false,
 "name": &"default",
@@ -55,5 +52,5 @@ script = ExtResource("1")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("1")
 autoplay = "default"
-frame = 5
-frame_progress = 0.9975909
+frame = 0
+frame_progress = 0.0

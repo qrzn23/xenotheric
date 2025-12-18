@@ -11,7 +11,12 @@ func test_enemy_spawns_death_fx_on_death() -> void:
     world.add_child(enemy)
 
     enemy.take_damage(1)
+    await get_tree().process_frame
 
     var after := get_tree().get_nodes_in_group("enemy_death_fx").size()
     assert_eq(after, before + 1, "killing an enemy should spawn a death FX node")
-
+    for fx in get_tree().get_nodes_in_group("enemy_death_fx"):
+        fx.queue_free()
+    for drop in get_tree().get_nodes_in_group("power_up"):
+        drop.queue_free()
+    await get_tree().process_frame

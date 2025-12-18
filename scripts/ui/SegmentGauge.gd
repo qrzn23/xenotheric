@@ -24,35 +24,34 @@ func set_segments(new_segments: int) -> void:
     queue_redraw()
 
 func _draw() -> void:
-    var seg_count := max(segments, 1)
-    var w := size.x
-    var h := size.y
+    var seg_count: int = maxi(segments, 1)
+    var w: float = size.x
+    var h: float = size.y
     if w <= 0.0 or h <= 0.0:
         return
 
-    var gap := max(segment_gap, 0.0)
-    var total_gap := gap * float(seg_count - 1)
-    var seg_w := (w - total_gap) / float(seg_count)
+    var gap: float = maxf(segment_gap, 0.0)
+    var total_gap: float = gap * float(seg_count - 1)
+    var seg_w: float = (w - total_gap) / float(seg_count)
     if seg_w <= 0.0:
         return
 
-    var max_val := max(max_value, 1)
-    var filled := clamp(float(value) / float(max_val), 0.0, 1.0) * float(seg_count)
-    var filled_full := int(floor(filled))
-    var partial := filled - float(filled_full)
+    var max_val: int = maxi(max_value, 1)
+    var filled: float = clampf(float(value) / float(max_val), 0.0, 1.0) * float(seg_count)
+    var filled_full: int = int(floor(filled))
+    var partial: float = filled - float(filled_full)
 
-    var x := 0.0
+    var x: float = 0.0
     for i in range(seg_count):
-        var rect := Rect2(Vector2(x, 0.0), Vector2(seg_w, h))
+        var rect: Rect2 = Rect2(Vector2(x, 0.0), Vector2(seg_w, h))
         draw_rect(rect, empty_color, true)
 
         if i < filled_full:
             draw_rect(rect, fill_color, true)
         elif i == filled_full and partial > 0.0:
-            var partial_rect := Rect2(rect.position, Vector2(rect.size.x * partial, rect.size.y))
+            var partial_rect: Rect2 = Rect2(rect.position, Vector2(rect.size.x * partial, rect.size.y))
             draw_rect(partial_rect, fill_color, true)
 
         if outline_width > 0.0:
             draw_rect(rect, outline_color, false, outline_width)
         x += seg_w + gap
-

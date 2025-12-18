@@ -372,15 +372,15 @@ func _update_animation() -> void:
 
 	_play_anim(_sprite, anim)
 
-func _play_anim(sprite: AnimatedSprite2D, name: String) -> void:
+func _play_anim(sprite: AnimatedSprite2D, anim_name: String) -> void:
 	if not sprite:
 		return
-	if sprite.animation != name:
-		sprite.play(name)
-		_log_anim(name)
+	if sprite.animation != anim_name:
+		sprite.play(anim_name)
+		_log_anim(anim_name)
 	elif not sprite.is_playing():
 		sprite.play()
-		_log_anim(name)
+		_log_anim(anim_name)
 
 func _is_considered_on_floor() -> bool:
 	return _test_force_on_floor or is_on_floor()
@@ -406,9 +406,9 @@ func _log_inputs() -> void:
 	if Input.is_action_just_pressed("morph"):
 		print("input: morph pressed")
 
-func _log_anim(name: String) -> void:
+func _log_anim(anim_name: String) -> void:
 	if not debug_logs_enabled:
 		return
-	if name != _last_anim_logged:
-		print("anim:", name)
-		_last_anim_logged = name
+	if anim_name != _last_anim_logged:
+		print("anim:", anim_name)
+		_last_anim_logged = anim_name

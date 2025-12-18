@@ -15,5 +15,5 @@ func _explode() -> void:
 			body.take_damage(20)
 	queue_free()
 
-func _on_Missile_body_entered(body: Node) -> void:
+func _on_Missile_body_entered(_body: Node) -> void:
 	_explode()

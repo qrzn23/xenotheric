@@ -29,3 +29,8 @@ func test_enemy_drops_power_up_and_replenishes_energy() -> void:
     pickup._on_body_entered(player)
     assert_eq(GameState.health, 65, "power-up should add 25 energy")
 
+    for fx in get_tree().get_nodes_in_group("enemy_death_fx"):
+        fx.queue_free()
+    for drop in get_tree().get_nodes_in_group("power_up"):
+        drop.queue_free()
+    await get_tree().process_frame

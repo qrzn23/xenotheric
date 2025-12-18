@@ -4,7 +4,7 @@ extends Node
 # Emits signals for HUD updates and pickups.
 signal health_changed(current, max)
 signal missiles_changed(current, max)
-signal ability_unlocked(name)
+signal ability_unlocked(ability_id)
 signal key_collected(id: StringName)
 
 @export var max_health: int = 99
@@ -27,7 +27,7 @@ var pending_spawn: StringName = &""
 
 func _ready() -> void:
 	health = max_health
-	missiles = int(max_missiles / 2)
+	missiles = int(max_missiles / 2.0)
 	emit_signal("health_changed", health, max_health)
 	emit_signal("missiles_changed", missiles, max_missiles)
 
@@ -49,13 +49,13 @@ func spend_missile() -> bool:
 	emit_signal("missiles_changed", missiles, max_missiles)
 	return true
 
-func unlock(name: String) -> void:
-	if abilities.has(name):
-		abilities[name] = true
-		ability_unlocked.emit(name)
+func unlock(ability_id: String) -> void:
+	if abilities.has(ability_id):
+		abilities[ability_id] = true
+		ability_unlocked.emit(ability_id)
 
-func has_ability(name: String) -> bool:
-	return abilities.get(name, false)
+func has_ability(ability_id: String) -> bool:
+	return abilities.get(ability_id, false)
 
 func collect_key(id: StringName) -> void:
 	if id == &"":

@@ -31,8 +31,9 @@ func _ensure_key(action_name: StringName, key: int) -> void:
 	if _has_key(action_name, key):
 		return
 	var event := InputEventKey.new()
-	event.physical_keycode = key
-	event.keycode = key
+	var key_enum := key as Key
+	event.physical_keycode = key_enum
+	event.keycode = key_enum
 	InputMap.action_add_event(action_name, event)
 
 func _has_key(action_name: StringName, key: int) -> bool:

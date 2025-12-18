@@ -4,8 +4,6 @@ extends Node2D
 @export var look_ahead: Vector2 = Vector2(96, 32)
 @export var smoothing: float = 6.0
 
-var _velocity := Vector2.ZERO
-
 func _process(delta: float) -> void:
 	if not is_instance_valid(get_node_or_null(target_path)):
 		return
