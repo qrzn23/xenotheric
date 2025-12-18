@@ -40,6 +40,14 @@ func test_crab_enters_and_exits_chase_state() -> void:
     crab._physics_process(0.016)
     assert_eq(crab.get_state(), patrol_state, "crab should return to patrol when target is too far away")
 
+func test_crab_aggro_area_is_not_monitorable() -> void:
+    var crab_scene := preload("res://scenes/enemies/Crab.tscn")
+    var crab := crab_scene.instantiate() as Node
+    add_child_autofree(crab)
+
+    var aggro := crab.get_node("AggroArea") as Area2D
+    assert_false(aggro.monitorable, "aggro area should not be monitorable (prevents bullets from damaging via area overlap)")
+
 func _state_value(script: Script, name: String) -> int:
     if not script:
         return -1
