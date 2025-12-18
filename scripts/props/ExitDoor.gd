@@ -52,10 +52,8 @@ func _on_body_entered(body: Node) -> void:
     transition_requested.emit(destination_scene, destination_spawn)
     if auto_transition and destination_scene != "":
         var router := get_tree().get_first_node_in_group("scene_router")
-        if router and router.has_method("change_room"):
-            router.call_deferred("change_room", destination_scene, destination_spawn)
-        else:
-            get_tree().change_scene_to_file(destination_scene)
+        if not router:
+            get_tree().call_deferred("change_scene_to_file", destination_scene)
 
 func _on_area_entered(area: Area2D) -> void:
     if not area:

@@ -1,14 +1,26 @@
 extends Node
 
+@export var start_in_menu: bool = true
 @export_file("*.tscn") var start_room_scene: String = "res://scenes/TestRoom.tscn"
+@export_file("*.tscn") var start_game_scene: String = "res://scenes/TestRoom2.tscn"
+@export_file("*.tscn") var test_room_scene: String = "res://scenes/TestRoom.tscn"
+@export_file("*.tscn") var menu_scene: String = "res://scenes/ui/MainMenu.tscn"
 
 @onready var world: Node = $World
+@onready var hud: CanvasLayer = $HUD
 
 var _current_room: Node = null
+var _menu: Control = null
 
 func _ready() -> void:
 	add_to_group("scene_router")
+	if start_in_menu:
+		hud.visible = false
+		_show_menu()
+		return
+
 	if start_room_scene != "":
+		hud.visible = true
 		change_room(start_room_scene, &"")
 
 func change_room(destination_scene: String, destination_spawn: StringName = &"") -> void:
@@ -54,3 +66,31 @@ func _connect_room_doors(room: Node) -> void:
 
 func _on_transition_requested(destination_scene: String, destination_spawn: StringName) -> void:
 	change_room(destination_scene, destination_spawn)
+
+func _show_menu() -> void:
+	if _menu and is_instance_valid(_menu):
+		_menu.queue_free()
+		_menu = null
+
+	var packed := load(menu_scene) as PackedScene
+	if not packed:
+		push_error("Main: failed to load menu: %s" % menu_scene)
+		return
+	_menu = packed.instantiate() as Control
+	add_child(_menu)
+
+	if _menu.has_signal("mode_selected"):
+		_menu.connect("mode_selected", Callable(self, "_on_menu_mode_selected"))
+	if _menu.has_signal("quit_requested"):
+		_menu.connect("quit_requested", Callable(self, "_on_menu_quit_requested"))
+
+func _on_menu_mode_selected(mode: StringName) -> void:
+	if _menu and is_instance_valid(_menu):
+		_menu.queue_free()
+		_menu = null
+	hud.visible = true
+	var scene := test_room_scene if mode == &"test" else start_game_scene
+	change_room(scene, &"")
+
+func _on_menu_quit_requested() -> void:
+	get_tree().quit()

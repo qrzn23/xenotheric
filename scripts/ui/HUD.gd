@@ -7,6 +7,7 @@ extends CanvasLayer
 @onready var missiles_gauge: Control = $TopBar/MarginContainer/Row/MissileBox/MissileRow/MissileGauge
 
 func _ready() -> void:
+    add_to_group(&"hud")
     GameState.health_changed.connect(_on_health_changed)
     GameState.missiles_changed.connect(_on_missiles_changed)
     _on_health_changed(GameState.health, GameState.max_health)
