@@ -10,7 +10,7 @@ func _ready() -> void:
     _on_missiles_changed(GameState.missiles, GameState.max_missiles)
 
 func _on_health_changed(current: int, max_value: int) -> void:
-    health_label.text = "HP: %d/%d" % [current, max_value]
+    health_label.text = "Energy: %d/%d" % [current, max_value]
 
 func _on_missiles_changed(current: int, max_value: int) -> void:
     missile_label.text = "Missiles: %d/%d" % [current, max_value]

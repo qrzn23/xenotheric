@@ -282,6 +282,7 @@ func _fire_bullet(aim_up: bool) -> void:
     var dir := Vector2.UP if aim_up else Vector2(_facing, 0)
     bullet.global_position = _get_bullet_spawn_position(dir)
     bullet.direction = dir
+    bullet.source = self
     var parent := get_parent()
     if not parent:
         parent = get_tree().current_scene

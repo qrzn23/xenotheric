@@ -19,7 +19,7 @@ size_flags_horizontal = 1
 size_flags_vertical = 1
 
 [node name="Health" type="Label" parent="MarginContainer/VBoxContainer"]
-text = "HP: 0/0"
+text = "Energy: 0/0"
 
 [node name="Missiles" type="Label" parent="MarginContainer/VBoxContainer"]
 text = "Missiles: 0/0"
