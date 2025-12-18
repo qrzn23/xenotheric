@@ -1,4 +1,4 @@
-extends Area2D
+extends Node2D
 
 signal transition_requested(destination_scene: String, destination_spawn: StringName)
 signal locked(required_weapon: StringName)
@@ -8,15 +8,31 @@ signal opened(required_weapon: StringName)
 @export var destination_spawn: StringName = &"PlayerSpawn"
 @export_enum("bullet", "missile", "any") var required_weapon: String = "bullet"
 @export var auto_transition: bool = true
-@export var open_time: float = 1.2
+@export var open_time: float = 3.0
 
 var _is_open: bool = false
 
+var _trigger_area: Area2D
+var _hit_area: Area2D
+var _blocker_shape: CollisionShape2D
+var _close_timer: Timer
+
 func _ready() -> void:
-    if not body_entered.is_connected(_on_body_entered):
-        body_entered.connect(_on_body_entered)
-    if not area_entered.is_connected(_on_area_entered):
-        area_entered.connect(_on_area_entered)
+    _trigger_area = get_node_or_null("TriggerArea") as Area2D
+    _hit_area = get_node_or_null("HitArea") as Area2D
+    _blocker_shape = get_node_or_null("Blocker/CollisionShape2D") as CollisionShape2D
+    _close_timer = get_node_or_null("CloseTimer") as Timer
+
+    if _close_timer:
+        _close_timer.one_shot = true
+        if not _close_timer.timeout.is_connected(_close):
+            _close_timer.timeout.connect(_close)
+
+    if _trigger_area and not _trigger_area.body_entered.is_connected(_on_body_entered):
+        _trigger_area.body_entered.connect(_on_body_entered)
+
+    if _hit_area and not _hit_area.area_entered.is_connected(_on_area_entered):
+        _hit_area.area_entered.connect(_on_area_entered)
 
 func _on_body_entered(body: Node) -> void:
     if not body or not body.is_in_group("player"):
@@ -51,8 +67,12 @@ func _matches_required_weapon(projectile: Area2D) -> bool:
 func _open() -> void:
     _is_open = true
     opened.emit(StringName(required_weapon))
-    if open_time > 0.0:
-        get_tree().create_timer(open_time).timeout.connect(_close)
+    if _blocker_shape:
+        _blocker_shape.set_deferred("disabled", true)
+    if _close_timer and open_time > 0.0:
+        _close_timer.start(open_time)
 
 func _close() -> void:
     _is_open = false
+    if _blocker_shape:
+        _blocker_shape.set_deferred("disabled", false)
