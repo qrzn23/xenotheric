@@ -12,7 +12,7 @@ func test_player_cannot_be_hurt_by_own_bullet() -> void:
     var sensor := Area2D.new()
     player.add_child(sensor)
 
-    var bullet := load("res://scripts/props/Bullet.gd").new()
+    var bullet: Area2D = load("res://scripts/props/Bullet.gd").new()
     add_child_autofree(bullet)
     bullet.source = player
 
@@ -20,4 +20,3 @@ func test_player_cannot_be_hurt_by_own_bullet() -> void:
 
     assert_eq(GameState.health, 10, "player should not take damage from their own bullet")
     assert_false(bullet.is_queued_for_deletion(), "bullet should not be consumed when hitting the player")
-

@@ -1,13 +1,13 @@
-[gd_scene load_steps=6 format=4 uid="uid://e7v1wkgdxcq2"]
+[gd_scene load_steps=7 format=4 uid="uid://e7v1wkgdxcq2"]
 
 [ext_resource type="PackedScene" uid="uid://bjs2t8lavsvev" path="res://scenes/player/Player.tscn" id="1"]
 [ext_resource type="PackedScene" path="res://scenes/core/CameraRig.tscn" id="2"]
 [ext_resource type="TileSet" uid="uid://ckcmbktqx11f8" path="res://assets/tilesets/EnvironmentTileset.tres" id="3"]
 [ext_resource type="PackedScene" uid="uid://d1umtvwjaheiq" path="res://scenes/enemies/Crab.tscn" id="4"]
 [ext_resource type="Script" uid="uid://cb7l1ynf8evm3" path="res://scripts/rooms/TestRoomController.gd" id="5"]
+[ext_resource type="PackedScene" path="res://scenes/props/KeyPickup.tscn" id="6_6q47c"]
 
-[node name="TestRoom" type="Node2D"]
-position = Vector2(1, 0)
+[node name="TestRoom" type="Node"]
 
 [node name="Controller" type="Node" parent="."]
 script = ExtResource("5")
@@ -30,3 +30,6 @@ position = Vector2(56, 104)
 target_path = NodePath("../Player")
 
 [node name="UI" type="CanvasLayer" parent="."]
+
+[node name="KeyPickup" parent="." instance=ExtResource("6_6q47c")]
+position = Vector2(520, -72)

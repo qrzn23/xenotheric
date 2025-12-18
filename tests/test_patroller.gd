@@ -13,3 +13,8 @@ func test_patroller_dies_on_damage() -> void:
     patroller.take_damage(5)
     assert_true(patroller.is_queued_for_deletion(), "patroller should queue free when damaged")
     await get_tree().process_frame
+    for fx in get_tree().get_nodes_in_group("enemy_death_fx"):
+        fx.queue_free()
+    for drop in get_tree().get_nodes_in_group("power_up"):
+        drop.queue_free()
+    await get_tree().process_frame

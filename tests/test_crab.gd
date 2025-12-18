@@ -14,6 +14,11 @@ func test_crab_dies_on_damage() -> void:
     crab.take_damage(2)
     assert_true(crab.is_queued_for_deletion(), "crab should queue free when health reaches 0")
     await get_tree().process_frame
+    for fx in get_tree().get_nodes_in_group("enemy_death_fx"):
+        fx.queue_free()
+    for drop in get_tree().get_nodes_in_group("power_up"):
+        drop.queue_free()
+    await get_tree().process_frame
 
 func test_crab_enters_and_exits_chase_state() -> void:
     var world := Node2D.new()

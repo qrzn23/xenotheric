@@ -7,12 +7,12 @@ extends Node2D
 var _velocity := Vector2.ZERO
 
 func _process(delta: float) -> void:
-    if not is_instance_valid(get_node_or_null(target_path)):
-        return
-    var target: Node2D = get_node(target_path)
-    var desired := target.global_position
-    # Simple look-ahead based on target velocity if available
-    if target.has_method("get_velocity"):
-        var v: Vector2 = target.get_velocity()
-        desired += Vector2(sign(v.x) * look_ahead.x, sign(v.y) * look_ahead.y)
-    global_position = global_position.lerp(desired, clamp(delta * smoothing, 0, 1))
+	if not is_instance_valid(get_node_or_null(target_path)):
+		return
+	var target: Node2D = get_node(target_path)
+	var desired := target.global_position
+	# Simple look-ahead based on target velocity if available
+	if target.has_method("get_velocity"):
+		var v: Vector2 = target.get_velocity()
+		desired += Vector2(sign(v.x) * look_ahead.x, sign(v.y) * look_ahead.y)
+	global_position = global_position.lerp(desired, clamp(delta * smoothing, 0, 1))
