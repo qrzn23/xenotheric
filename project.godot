@@ -36,6 +36,10 @@ window/stretch/mode="viewport"
 window/stretch/scale=3.0
 window/stretch/scale_mode="integer"
 
+[gui]
+
+theme/custom="res://assets/themes/XenothericTheme.tres"
+
 [input]
 
 move_left={
