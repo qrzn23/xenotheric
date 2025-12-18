@@ -7,7 +7,7 @@ class WallJumpPlayer:
     func _get_wall_normal() -> Vector2:
         return Vector2(-1, 0)
 
-var world: Node
+var world: Node2D
 var player: CharacterBody2D
 
 func before_each():
@@ -19,7 +19,7 @@ func before_each():
     GameState.abilities["wall_jump"] = true
     GameState.abilities["missile"] = true
 
-    world = Node.new()
+    world = Node2D.new()
     get_tree().root.add_child(world)
     get_tree().set_current_scene(world)
 
@@ -33,6 +33,10 @@ func after_each():
         get_tree().set_current_scene(null)
     if is_instance_valid(world):
         world.queue_free()
+        await get_tree().process_frame
+        await get_tree().process_frame
+    world = null
+    player = null
 
 func test_dash_sets_timer_when_unlocked():
     GameState.abilities["dash"] = true

@@ -5,7 +5,6 @@ extends Node
 signal health_changed(current, max)
 signal missiles_changed(current, max)
 signal ability_unlocked(ability_id)
-signal key_collected(id: StringName)
 
 @export var max_health: int = 99
 @export var max_missiles: int = 10
@@ -22,7 +21,6 @@ var abilities: Dictionary = {
 	"grapple": false,
 }
 
-var keys: Dictionary = {}
 var pending_spawn: StringName = &""
 
 func _ready() -> void:
@@ -56,24 +54,6 @@ func unlock(ability_id: String) -> void:
 
 func has_ability(ability_id: String) -> bool:
 	return abilities.get(ability_id, false)
-
-func collect_key(id: StringName) -> void:
-	if id == &"":
-		return
-	keys[id] = true
-	key_collected.emit(id)
-
-func has_key(id: StringName) -> bool:
-	if id == &"":
-		return true
-	return bool(keys.get(id, false))
-
-func consume_key(id: StringName) -> bool:
-	if not has_key(id):
-		return false
-	if id != &"":
-		keys.erase(id)
-	return true
 
 func clear_pending_spawn() -> void:
 	pending_spawn = &""

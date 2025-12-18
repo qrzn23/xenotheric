@@ -7,6 +7,8 @@ var source: Node
 const IMPACT_SCENE := preload("res://scenes/props/Impact.tscn")
 
 func _ready() -> void:
+    add_to_group("player_projectile")
+    add_to_group("bullet")
     if not body_entered.is_connected(_on_body_entered):
         body_entered.connect(_on_body_entered)
     if not area_entered.is_connected(_on_area_entered):
