@@ -8,7 +8,10 @@ func _ready() -> void:
     var sprite := $AnimatedSprite2D as AnimatedSprite2D
     sprite.animation_finished.connect(_on_animation_finished)
     sprite.play(animation_name)
-    get_tree().create_timer(max_lifetime).timeout.connect(_on_lifetime_expired)
+    var lifetime := max_lifetime
+    if OS.has_feature("headless"):
+        lifetime = 0.0
+    get_tree().create_timer(lifetime).timeout.connect(_on_lifetime_expired)
 
 func _on_animation_finished() -> void:
     queue_free()

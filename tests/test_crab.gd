@@ -13,6 +13,7 @@ func test_crab_dies_on_damage() -> void:
     add_child_autofree(crab)
     crab.take_damage(2)
     assert_true(crab.is_queued_for_deletion(), "crab should queue free when health reaches 0")
+    await get_tree().process_frame
 
 func test_crab_enters_and_exits_chase_state() -> void:
     var world := Node2D.new()
