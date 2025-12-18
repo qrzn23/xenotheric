@@ -1,4 +1,4 @@
-[gd_scene load_steps=62 format=3 uid="uid://bjs2t8lavsvev"]
+[gd_scene load_steps=65 format=3 uid="uid://bjs2t8lavsvev"]
 
 [ext_resource type="Script" uid="uid://drwc05gy2tjvo" path="res://scripts/player/Player.gd" id="1"]
 [ext_resource type="Texture2D" uid="uid://ddsam0vji217c" path="res://assets/spritesheets/player/player-cling.png" id="2_rn7t0"]
@@ -14,7 +14,10 @@
 [ext_resource type="Texture2D" uid="uid://f6cxxb75hxu4" path="res://assets/spritesheets/player/player-stand.png" id="13_ejd4k"]
 [ext_resource type="Texture2D" uid="uid://dl0fmiv1txee5" path="res://assets/spritesheets/player/player-shoot-up.png" id="14_2xrq6"]
 [ext_resource type="Texture2D" uid="uid://d1ouwicnocrvc" path="res://assets/spritesheets/player/player-run.png" id="18_pi3ps"]
-[ext_resource type="Texture2D" uid="uid://drw1b6138p60" path="res://assets/sprites/player/player-duck/player-duck.png" id="20"]
+[ext_resource type="Texture2D" uid="uid://bjy5bvg3rpayd" path="res://assets/sprites/player/morphball/morphball-1.png" id="21"]
+[ext_resource type="Texture2D" uid="uid://d4lovk366oypo" path="res://assets/sprites/player/morphball/morphball-2.png" id="22"]
+[ext_resource type="Texture2D" uid="uid://cwrg634s25qma" path="res://assets/sprites/player/morphball/morphball-3.png" id="23"]
+[ext_resource type="Texture2D" uid="uid://cjehwafc1l2nn" path="res://assets/sprites/player/morphball/morphball-4.png" id="24"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_5cssr"]
 atlas = ExtResource("2_rn7t0")
@@ -394,7 +397,7 @@ height = 38.0
 animations = [{
 "frames": [{
 "duration": 0.12,
-"texture": ExtResource("20")
+"texture": ExtResource("21")
 }],
 "loop": true,
 "name": &"idle",
@@ -402,14 +405,20 @@ animations = [{
 }, {
 "frames": [{
 "duration": 0.1,
-"texture": ExtResource("20")
+"texture": ExtResource("21")
 }, {
 "duration": 0.1,
-"texture": ExtResource("20")
+"texture": ExtResource("22")
+}, {
+"duration": 0.1,
+"texture": ExtResource("23")
+}, {
+"duration": 0.1,
+"texture": ExtResource("24")
 }],
 "loop": true,
 "name": &"roll",
-"speed": 6.0
+"speed": 8.0
 }]
 
 [node name="Player" type="CharacterBody2D"]
@@ -426,7 +435,7 @@ shape = SubResource("1")
 
 [node name="MorphSprite2D" type="AnimatedSprite2D" parent="."]
 visible = false
-position = Vector2(0, -2)
+position = Vector2(19, -17)
 sprite_frames = SubResource("3")
 animation = &"idle"
 

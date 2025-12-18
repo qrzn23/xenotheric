@@ -5,6 +5,7 @@
 [ext_resource type="TileSet" uid="uid://ckcmbktqx11f8" path="res://assets/tilesets/EnvironmentTileset.tres" id="3"]
 [ext_resource type="PackedScene" uid="uid://d1umtvwjaheiq" path="res://scenes/enemies/Crab.tscn" id="4"]
 [ext_resource type="Script" uid="uid://cb7l1ynf8evm3" path="res://scripts/rooms/TestRoomController.gd" id="5"]
+[ext_resource type="PackedScene" path="res://scenes/props/DoubleJumpPickup.tscn" id="7_gfl4d"]
 [ext_resource type="PackedScene" path="res://scenes/props/ExitDoor.tscn" id="8_5y6w3"]
 
 [node name="TestRoom" type="Node2D"]
@@ -31,4 +32,6 @@ target_path = NodePath("../Player")
 
 [node name="ExitDoor" parent="." instance=ExtResource("8_5y6w3")]
 position = Vector2(568, 96)
-required_weapon = "bullet"
+
+[node name="DoubleJumpPickup" parent="." instance=ExtResource("7_gfl4d")]
+position = Vector2(424, 8)
