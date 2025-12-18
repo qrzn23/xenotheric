@@ -1,4 +1,5 @@
 extends CharacterBody2D
+class_name Player
 
 signal fired(normal)
 signal missile_fired(normal)
@@ -48,6 +49,7 @@ var _morph_sprite: AnimatedSprite2D
 var _collider: CollisionShape2D
 var _weapon_spawn: Marker2D
 var _nozzle_up: Marker2D
+var _nozzle_duck: Marker2D
 
 var _use_action_move := true
 
@@ -63,6 +65,7 @@ func _ready() -> void:
     _collider = get_node_or_null("CollisionShape2D") as CollisionShape2D
     _weapon_spawn = get_node_or_null("WeaponSpawn") as Marker2D
     _nozzle_up = get_node_or_null("NozzleUp") as Marker2D
+    _nozzle_duck = get_node_or_null("NozzleDuck") as Marker2D
     _use_action_move = _action_has_events(&"move_left") and _action_has_events(&"move_right")
     set_physics_process(true)
 
@@ -131,6 +134,11 @@ func _handle_input(delta: float) -> void:
         _shoot_timer = max(_shoot_timer, shoot_hold_time)
 
     if Input.is_action_just_pressed("fire"):
+        # Ensure the current pose state is applied before computing the bullet
+        # spawn position. Ducking shots should use the duck nozzle even if the
+        # player was previously idle/run this frame.
+        if duck_input:
+            _set_state(PlayerState.DUCK)
         _fire_bullet(_can_aim() and Input.is_action_pressed("move_up") and not duck_input)
     if Input.is_action_just_pressed("missile") and GameState.has_ability("missile"):
         _fire_missile()
@@ -286,6 +294,8 @@ func _get_bullet_spawn_position(dir: Vector2) -> Vector2:
     var base_offset := Vector2(20, -24)
     if dir.y < -0.5 and _nozzle_up:
         base_offset = _nozzle_up.position
+    elif _state == PlayerState.DUCK and _nozzle_duck:
+        base_offset = _nozzle_duck.position
     elif _weapon_spawn:
         base_offset = _weapon_spawn.position
 

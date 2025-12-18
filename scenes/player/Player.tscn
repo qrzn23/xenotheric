@@ -443,3 +443,6 @@ position = Vector2(38, -27)
 
 [node name="NozzleUp" type="Marker2D" parent="."]
 position = Vector2(20, -41)
+
+[node name="NozzleDuck" type="Marker2D" parent="."]
+position = Vector2(38, -15)
