@@ -16,13 +16,19 @@ var _trigger_area: Area2D
 var _hit_area: Area2D
 var _blocker_shape: CollisionShape2D
 var _close_timer: Timer
+var _sprite: AnimatedSprite2D
 
 func _ready() -> void:
     add_to_group("exit_door")
+    _sprite = get_node_or_null("AnimatedSprite2D") as AnimatedSprite2D
     _trigger_area = get_node_or_null("TriggerArea") as Area2D
     _hit_area = get_node_or_null("HitArea") as Area2D
     _blocker_shape = get_node_or_null("Blocker/CollisionShape2D") as CollisionShape2D
     _close_timer = get_node_or_null("CloseTimer") as Timer
+
+    if _sprite:
+        _sprite.animation = &"closed"
+        _sprite.frame = 0
 
     if _close_timer:
         _close_timer.one_shot = true
@@ -74,6 +80,8 @@ func _open() -> void:
     opened.emit(StringName(required_weapon))
     if _blocker_shape:
         _blocker_shape.set_deferred("disabled", true)
+    if _sprite:
+        _sprite.play(&"open")
     if _close_timer and open_time > 0.0:
         _close_timer.start(open_time)
 
@@ -81,3 +89,5 @@ func _close() -> void:
     _is_open = false
     if _blocker_shape:
         _blocker_shape.set_deferred("disabled", false)
+    if _sprite:
+        _sprite.play(&"close")

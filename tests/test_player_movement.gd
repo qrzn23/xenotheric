@@ -15,8 +15,10 @@ func test_morph_toggle_adjusts_collider_and_sprites():
     var shape := collider.shape as CapsuleShape2D
     player._toggle_morph()
     assert_eq(shape.height, player.morph_height, "height shrinks in morph ball")
+    assert_eq(shape.radius, player.morph_radius, "radius shrinks in morph ball")
     assert_false(player.get_node("Sprite2D").visible, "stand sprite hides in morph")
     assert_true(player.get_node("MorphSprite2D").visible, "morph sprite shows")
     player._toggle_morph()
     assert_eq(shape.height, player.stand_height, "height returns on unmorph")
+    assert_eq(shape.radius, player.stand_radius, "radius returns on unmorph")
     assert_true(player.get_node("Sprite2D").visible, "stand sprite shows after unmorph")

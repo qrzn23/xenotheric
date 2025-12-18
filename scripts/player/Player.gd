@@ -55,9 +55,12 @@ var _nozzle_duck: Marker2D
 var _use_action_move := true
 
 @export var debug_logs_enabled := false
+@export var stand_radius := 14.0
+@export var morph_radius := 10.0
 
 const BULLET_SCENE := preload("res://scenes/props/Bullet.tscn")
 const MISSILE_SCENE := preload("res://scenes/props/Missile.tscn")
+const BOMB_SCENE := preload("res://scenes/props/Bomb.tscn")
 
 func _ready() -> void:
 	add_to_group("player")
@@ -116,6 +119,16 @@ func _handle_input(delta: float) -> void:
 	else:
 		velocity.x = lerp(velocity.x, desired, accel * delta)
 
+	if Input.is_action_just_pressed("morph"):
+		_toggle_morph()
+
+	if _state == PlayerState.MORPH:
+		_jump_buffer = 0
+		_shoot_timer = 0
+		if Input.is_action_just_pressed("fire"):
+			_plant_bomb()
+		return
+
 	if Input.is_action_just_pressed("jump"):
 		_jump_buffer = jump_buffer
 	if _jump_buffer > 0 and _try_consume_jump():
@@ -128,10 +141,7 @@ func _handle_input(delta: float) -> void:
 		_dash_timer = dash_time
 		_set_state(PlayerState.DASH)
 
-	if Input.is_action_just_pressed("morph"):
-		_toggle_morph()
-
-	if Input.is_action_pressed("fire"):
+	if _state != PlayerState.MORPH and Input.is_action_pressed("fire"):
 		_shoot_timer = max(_shoot_timer, shoot_hold_time)
 
 	if Input.is_action_just_pressed("fire"):
@@ -284,7 +294,12 @@ func _toggle_morph() -> void:
 
 	if _collider and _collider.shape is CapsuleShape2D:
 		var shape := _collider.shape as CapsuleShape2D
-		shape.height = morph_height if _state == PlayerState.MORPH else stand_height
+		if _state == PlayerState.MORPH:
+			shape.height = morph_height
+			shape.radius = morph_radius
+		else:
+			shape.height = stand_height
+			shape.radius = stand_radius
 
 	if _sprite:
 		_sprite.visible = _state != PlayerState.MORPH
@@ -294,6 +309,8 @@ func _toggle_morph() -> void:
 	_update_animation()
 
 func _fire_bullet(aim_up: bool) -> void:
+	if _state == PlayerState.MORPH:
+		return
 	var bullet := BULLET_SCENE.instantiate()
 	var dir := Vector2.UP if aim_up else Vector2(_facing, 0)
 	bullet.global_position = _get_bullet_spawn_position(dir)
@@ -328,6 +345,8 @@ func _get_bullet_spawn_position(dir: Vector2) -> Vector2:
 	return global_position + Vector2(x, base_offset.y)
 
 func _fire_missile() -> void:
+	if _state == PlayerState.MORPH:
+		return
 	if not GameState.spend_missile():
 		return
 	var missile := MISSILE_SCENE.instantiate()
@@ -340,6 +359,26 @@ func _fire_missile() -> void:
 		parent = get_tree().root
 	parent.add_child(missile)
 	missile_fired.emit(Vector2(_facing, 0))
+
+func _plant_bomb(fuse_override: float = -1.0) -> Node2D:
+	if _state != PlayerState.MORPH:
+		return null
+	if not GameState.has_ability("bombs"):
+		return null
+
+	var bomb := BOMB_SCENE.instantiate() as Node2D
+	if fuse_override > 0.0:
+		bomb.set("fuse_time", fuse_override)
+	bomb.global_position = global_position + Vector2(0, -6)
+	bomb.set("source", self)
+
+	var parent := get_parent()
+	if not parent:
+		parent = get_tree().current_scene
+	if not parent:
+		parent = get_tree().root
+	parent.add_child(bomb)
+	return bomb
 
 func take_damage(amount: int) -> void:
 	if _invuln_timer > 0:

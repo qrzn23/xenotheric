@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/props/Pickup.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/sprites/Fx/power-up/power-up-1.png" id="2"]
+
+[sub_resource type="CircleShape2D" id="1"]
+radius = 8.0
+
+[node name="BombsPickup" type="Area2D"]
+script = ExtResource("1")
+pickup_type = "ability"
+amount = 0
+ability_name = "bombs"
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2")
+modulate = Color(1, 0.35, 0.35, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("1")
+
